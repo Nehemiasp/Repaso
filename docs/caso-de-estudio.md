@@ -77,6 +77,8 @@ Para sacar las capturas «después»: `npm run screenshots -- --out docs/assets/
 
 **[Qué cambié y por qué: jerarquía, densidad de la fila de hallazgo, el motivo de cuadros, el tono del texto. Aquí está su criterio, que es lo que muestra el caso.]**
 
+> Historias más cortas dentro del caso: `docs/bitacora-de-errores.md` (6 errores con captura antes/después y 4 sin captura).
+
 ### Qué me sorprendió del trabajo con la IA
 - Salió bien a la primera lo mecánico (tokens, componentes, estados, teclado).
 - Me tocó a mí decidir lo que no se puede medir: qué regla molesta, cuánta información cabe en 560 px de alto, cuándo un aviso es ruido.

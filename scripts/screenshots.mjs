@@ -1,4 +1,4 @@
-// Capturas de la galería de estados. Uso: node scripts/screenshots.mjs [--scale 2] [--out docs/assets/screens] [id…]
+// Capturas de la galería de estados. Uso: node scripts/screenshots.mjs [--scale 2] [--out docs/assets/screens] [--size 320x440] [--theme dark] [--scroll 700] [id…]
 // Sin ids, captura todas las pantallas en claro y oscuro.
 import { build } from 'esbuild';
 import { cp, mkdir } from 'node:fs/promises';
@@ -16,7 +16,10 @@ const opt = (name, def) => {
 };
 const scale = Number(opt('scale', 1));
 const out = opt('out', 'docs/assets/screens');
-const skip = new Set(['--scale', opt('scale', ''), '--out', opt('out', '')]);
+const size = opt('size', '');
+const themesArg = opt('theme', '');
+const scroll = Number(opt('scroll', 0));
+const skip = new Set(['--scale', opt('scale', ''), '--out', opt('out', ''), '--size', size, '--theme', themesArg, '--scroll', String(scroll || '')]);
 const ids = args.filter((a) => !skip.has(a) && !a.startsWith('--'));
 
 await mkdir('preview-dist', { recursive: true });
@@ -44,9 +47,10 @@ const all = await page.$$eval('[data-screen][data-theme="light"]', (els) => els.
 const list = ids.length ? ids : all;
 
 for (const id of list) {
-  for (const theme of ['light', 'dark']) {
-    await page.goto(`${base}?only=${id}&theme=${theme}`);
+  for (const theme of themesArg ? [themesArg] : ['light', 'dark']) {
+    await page.goto(`${base}?only=${id}&theme=${theme}${size ? `&size=${size}` : ''}`);
     await page.waitForSelector(`[data-screen="${id}"]`);
+    if (scroll) await page.evaluate((y) => document.querySelector('.rp-screen__body')?.scrollTo(0, y), scroll);
     await page.waitForTimeout(250); // deja terminar las transiciones de entrada
     const el = await page.$(`[data-screen="${id}"]`);
     await el.screenshot({ path: path.join(out, `${id}.${theme}.png`) });

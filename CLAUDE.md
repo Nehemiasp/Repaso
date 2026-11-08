@@ -38,6 +38,9 @@ Proyecto personal de Nehemias Pérez (Diseñador UI/UX) para su sección «Labor
 - Hook: al editar `src/**`, `scripts/hook-tests.mjs` corre Vitest relacionado (`.claude/settings.json`).
 - Al agregar una decisión técnica, añádala abajo en una línea.
 
+## Bitácora de errores (para el portafolio)
+Cada error visible se captura **antes de arreglarlo** (`node scripts/screenshots.mjs --out docs/assets/errores/E00N-nombre/antes <id>`), se arregla, se captura el «después» y se agrega una entrada en `docs/bitacora-de-errores.md` (qué se veía · causa · arreglo · lección). Si el estado no existe en la galería, primero se agrega a `preview/entries.tsx`. Los errores sin imagen (de código o de proceso) van en la sección «sin captura».
+
 ## Decisiones
 - **esbuild** para construir: sin Vite, menos dependencias y builds en milisegundos; la UI se incrusta en un solo HTML.
 - **Preact** para la UI: ~4 KB con API de React; más cómodo que JS puro para ~9 pantallas con estados.
