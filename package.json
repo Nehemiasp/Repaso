@@ -18,7 +18,9 @@
     "eval:names": "tsx evals/run-names.ts",
     "eval:copy": "tsx evals/run-copy.ts",
     "screenshots": "node scripts/screenshots.mjs",
-    "check:gallery": "node scripts/check-gallery.mjs"
+    "check:gallery": "node scripts/check-gallery.mjs",
+    "eval:report": "tsx evals/report.ts",
+    "eval:all": "npm run eval:rules && npm run eval:perf && npm run eval:report"
   },
   "devDependencies": {
     "@figma/plugin-typings": "^1.142.0",

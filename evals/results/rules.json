@@ -1,0 +1,22 @@
+{
+  "fecha": "2026-11-08T01:24:13.799Z",
+  "limpio": {
+    "capas": 7,
+    "hallazgos": 0,
+    "puntaje": 100,
+    "ids": []
+  },
+  "prueba": {
+    "capas": 23,
+    "esperados": 11,
+    "detectados": 11,
+    "sobrantes": [],
+    "noVerificables": 1,
+    "puntaje": 68,
+    "reglasCubiertas": 9
+  },
+  "textos": {
+    "capas": 20,
+    "hallazgosDeReglas": 0
+  }
+}
