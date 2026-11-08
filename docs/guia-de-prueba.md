@@ -51,14 +51,13 @@ Si Figma se queja del `id` del manifiesto (vale `0000000000000000000`): para des
 | 3.5 | Dibuje un rectángulo con **R**, selecciónelo y pulse Revisar | Resultados con pocos hallazgos: «Color sin estilo» (el gris por defecto) y «Capa sin nombre» («Rectangle 1»), sin errores en la consola |
 | 3.6 | Redimensione la ventana con el asa de la esquina inferior derecha; cierre y reabra el plugin | Cambia de tamaño y **recuerda el tamaño** |
 
-## 4 · Armar el archivo de prueba
-Siga **[`fixtures/archivo-prueba.md`](../fixtures/archivo-prueba.md)**: crea 4 estilos de color, 3 estilos de texto y 11 tarjetas, cada una con **un error a propósito**. Son unos 30 minutos.
+## 4 · El archivo de prueba
+**Ya está armado:** [Repaso · Archivo de prueba](https://www.figma.com/design/gedqxnqIPVgos61H09BRvx) (en su plan «Personal»). Ábralo en la app de escritorio y pase a la parte 5. Si prefiere armarlo usted, siga **[`fixtures/archivo-prueba.md`](../fixtures/archivo-prueba.md)**: crea 4 estilos de color, 3 estilos de texto y 11 tarjetas, cada una con **un error a propósito**. Son unos 30 minutos.
 
 Atajos:
 - Haga la **primera tarjeta bien** (auto layout vertical, gap 8, padding 16, relleno `Fondo/Blanco`, texto con estilo `Cuerpo`), duplíquela con `Ctrl/Cmd+D` y a cada copia cámbiele solo lo que dice la tabla.
 - El **set de componentes «Botón»** con la propiedad `Estado`: cree el componente, **Add variant** dos veces y renombre las propiedades a `Estado=Normal` y `Estado=Hover`.
 
-**Alternativa sin esfuerzo:** pídame que lo arme yo. Puedo crearlo en un archivo nuevo de su cuenta de Figma con las herramientas conectadas. No lo hice porque crea un archivo en su cuenta, y prefiero que usted lo decida.
 
 ## 5 · Lectura y reglas (la prueba más importante)
 Seleccione el frame **«Archivo de prueba»** y pulse **Revisar**.

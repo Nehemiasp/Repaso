@@ -1,11 +1,13 @@
 # Archivo de prueba para Figma (errores a propósito)
 
+> **Ya está armado:** [Repaso · Archivo de prueba](https://www.figma.com/design/gedqxnqIPVgos61H09BRvx) (en su plan «Personal»). Abra el archivo en la app de escritorio, seleccione el marco **«Archivo de prueba»** y revise: deben salir **11 hallazgos y 68/100**. Se comprobó corriendo el lector y el motor reales de Repaso dentro de Figma. Lo de abajo explica cómo está hecho, por si quiere rehacerlo o ampliarlo.
+
 Arme este archivo en Figma para probar Repaso de punta a punta. Equivale a `fixtures/archivo-prueba.json`, que usan las pruebas automáticas. **No use material de clientes ni de NIU.**
 
 ## 1. Preparación (una sola vez)
 1. Cree un archivo nuevo, una página «Archivo de prueba» y un frame **«Archivo de prueba»** de 390 × 1400, relleno blanco.
-2. Cree estos **estilos de color**: `Marca/Azul` #043565 · `Texto/Principal` #111111 · `Fondo/Blanco` #FFFFFF · `Fondo/Gris` #F2F4F7.
-3. Cree estos **estilos de texto** (Inter): `Cuerpo` 16 Regular · `Título` 24 Bold · `Etiqueta` 12 Medium.
+2. Cree estos **estilos de color**: `Marca/Azul` #043565 · `Texto/Principal` #111111 · `Fondo/Blanco` #FFFFFF · `Fondo/Gris` #F2F4F7 · `Texto/Gris claro` #B0B0B0 (solo para E01).
+3. Cree estos **estilos de texto** (Inter): `Cuerpo` 16 Regular · `Título` 24 Bold · `Etiqueta` 12 Medium · `Nota` 11 Regular (solo para E02: un texto con estilo no puede medir 11 px si el estilo mide otra cosa).
 4. Dentro del frame, apile 11 tarjetas (frames de 358 × 120, auto layout vertical, gap 8, padding 16, relleno `Fondo/Blanco`). Nómbrelas como abajo. **Todo lo que no sea el error de cada tarjeta debe llevar estilo** (texto con estilo `Cuerpo`, color con estilo `Texto/Principal`).
 
 ## 2. Un error por regla
