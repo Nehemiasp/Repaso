@@ -7,6 +7,7 @@ import { Button, Field, Header, Icon, NumberField, Notice, Screen, Segmented, Se
 import type { ContrastLevel, RuleId, Settings as SettingsT, Tone } from '../../shared/types';
 import './Screens.css';
 
+
 export const MODELS = [
   { value: 'claude-haiku-5-5', label: 'Claude Haiku 5.5 · económico (predeterminado)' },
   { value: 'claude-sonnet-5-5', label: 'Claude Sonnet 5.5 · equilibrado' },
@@ -100,6 +101,8 @@ export function Settings(p: SettingsProps) {
           <Switch label={t.settings.hidden} checked={!s.ignoreHidden} onChange={(on) => set('ignoreHidden', !on)} />
         </Section>
 
+        {(typeof __AI__ === 'undefined' || __AI__) && (
+        <>
         <Section id="s-tone" title={t.settings.tone} help={t.settings.toneHelp}>
           <Segmented<Tone>
             label={t.settings.tone}
@@ -140,11 +143,14 @@ export function Settings(p: SettingsProps) {
           <NumberField label={t.settings.budget} value={s.aiBudgetUsd} min={0.05} max={5} step={0.05} unit={t.settings.usd} hint={t.settings.budgetHelp} onChange={(v) => set('aiBudgetUsd', v)} />
         </Section>
 
+        </>
+        )}
+
         <Section id="s-priv" title={t.settings.privacy}>
           <div class="rp-privacy">
             <p class="rp-privacy__title">{t.settings.privacyTitle}</p>
             <ul class="rp-privacy__list">
-              {t.settings.privacyItems.map((i) => (
+              {((typeof __AI__ === 'undefined' || __AI__) ? t.settings.privacyItems : t.settings.privacyItemsLocal).map((i) => (
                 <li key={i.title} class="rp-privacy__item">
                   <span class="rp-privacy__icon"><Icon name={i.icon as IconName} size={16} /></span>
                   <span><strong>{i.title}.</strong> {i.text}</span>

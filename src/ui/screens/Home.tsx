@@ -3,6 +3,7 @@ import { Button, Header, IconButton, Notice, Screen, ScoreRing, Segmented, Sever
 import { plural, t } from '../i18n/es';
 import './Screens.css';
 
+
 export interface HomeProps {
   scope: Scope;
   onScope: (s: Scope) => void;
@@ -80,7 +81,7 @@ export function Home({ scope, onScope, selectionCount, last, rulesOn, rulesTotal
 
         <ul class="rp-chips" aria-label="Estado de la configuración">
           <li class="rp-chip">{t.home.rulesOn(rulesOn, rulesTotal)}</li>
-          <li class={`rp-chip ${ai === 'on' ? 'rp-chip--on' : ''}`}>{ai === 'on' ? t.home.aiOn : ai === 'off' ? t.home.aiOff : t.home.aiNoKey}</li>
+          {(typeof __AI__ === 'undefined' || __AI__) && <li class={`rp-chip ${ai === 'on' ? 'rp-chip--on' : ''}`}>{ai === 'on' ? t.home.aiOn : ai === 'off' ? t.home.aiOff : t.home.aiNoKey}</li>}
         </ul>
       </div>
     </Screen>

@@ -70,7 +70,7 @@ export async function runReview(scope: Scope, deps: ReviewDeps, signal: { cancel
     let aiSummary: string | undefined;
     let aiNotice: string | undefined;
 
-    if (settings.aiEnabled && !deps.noAi) {
+    if ((typeof __AI__ === 'undefined' || __AI__) && settings.aiEnabled && !deps.noAi) {
       const key = await loadKey();
       if (!key) {
         aiNotice = 'La IA está activada pero no hay una clave guardada, así que se revisó sin IA. Péguela en Ajustes.';

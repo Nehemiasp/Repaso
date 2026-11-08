@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Ícono de Repaso</title>
+<style>
+  :root { --tinta: #0A1626; --azul: #043565; --azul-claro: #8DB6E8; --papel: #FFFFFF; }
+  html, body { margin: 0; background: transparent; }
+  svg { display: block; }
+</style></head>
+<body>
+<!-- 128 × 128. Cuadro azul de esquinas suaves; cada cuadrito es una decisión revisada, el último lleva la marca de revisado. -->
+<svg id="icon" width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Repaso">
+  <rect width="128" height="128" rx="28" fill="var(--azul)"/>
+  <g transform="translate(24 24)" fill="var(--papel)">
+    <rect x="0"  y="0"  width="24" height="24" rx="4"/>
+    <rect x="28" y="0"  width="24" height="24" rx="4"/>
+    <rect x="56" y="0"  width="24" height="24" rx="4" opacity=".5"/>
+    <rect x="0"  y="28" width="24" height="24" rx="4"/>
+    <rect x="28" y="28" width="24" height="24" rx="4" opacity=".5"/>
+    <rect x="0"  y="56" width="24" height="24" rx="4" opacity=".5"/>
+    <rect x="56" y="56" width="24" height="24" rx="4" fill="var(--azul-claro)"/>
+    <path d="M62 68.5l5.2 5.2L75 63" fill="none" stroke="var(--tinta)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
+</body></html>

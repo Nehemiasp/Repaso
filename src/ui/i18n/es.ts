@@ -136,6 +136,11 @@ export const t = {
       { icon: 'wand', text: 'Corrige a un clic lo que se puede, y todo se deshace con Ctrl+Z.' },
       { icon: 'shield', text: 'La IA es opcional y usa su propia clave. Sin ella, nada sale de su equipo.' },
     ],
+    linesLocal: [
+      { icon: 'search', text: 'Revisa su selección o página y señala lo que un buen diseño no debería tener.' },
+      { icon: 'wand', text: 'Corrige a un clic lo que se puede, y todo se deshace con Ctrl+Z.' },
+      { icon: 'shield', text: 'Todo ocurre en su equipo: Repaso funciona sin internet y no envía nada.' },
+    ],
     start: 'Revisar selección',
     settings: 'Ajustes',
     about: 'Acerca de',
@@ -291,6 +296,10 @@ export const t = {
       { icon: 'type', title: 'Con IA, solo lo necesario', text: 'Nombres de capas, textos y estructura. Nunca imágenes ni el archivo completo.' },
       { icon: 'key', title: 'Su clave es suya', text: 'Se guarda en este equipo (figma.clientStorage). No va en el código ni pasa por servidor alguno de Repaso.' },
       { icon: 'globe', title: 'Un solo destino', text: 'Solo se habla con api.anthropic.com, y solo si usted activa la IA.' },
+    ],
+    privacyItemsLocal: [
+      { icon: 'wifi-off', title: 'Todo es local', text: 'Repaso funciona sin internet y no envía nada fuera de su equipo.' },
+      { icon: 'lock', title: 'Sin cuentas ni servidores', text: 'No hay registro, ni claves, ni servidor de Repaso. Lo que revisa se queda en Figma.' },
     ],
     resetDefaults: 'Restaurar valores',
     clearIgnored: (n: number) => `Borrar ${plural(n, 'ignorado', 'ignorados')} de este archivo`,

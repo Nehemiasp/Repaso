@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Portada de Repaso</title>
+<style>
+  :root { --tinta: #0A1626; --tinta-2: #112540; --azul: #043565; --azul-claro: #8DB6E8; --papel: #F6F4EF; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  #cover { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: radial-gradient(1200px 800px at 85% 40%, var(--tinta-2), var(--tinta)); color: var(--papel); font-family: Inter, system-ui, sans-serif; }
+  .motivo { position: absolute; left: 96px; top: 96px; display: grid; grid-template-columns: repeat(7, 28px); gap: 8px; }
+  .motivo i { width: 28px; height: 28px; border-radius: 5px; background: var(--azul-claro); }
+  .texto { position: absolute; left: 96px; top: 330px; width: 900px; }
+  h1 { margin: 0; font-size: 188px; line-height: 1; font-weight: 700; letter-spacing: -0.03em; }
+  .tag { margin: 28px 0 0; font-size: 56px; line-height: 1.15; font-weight: 600; color: var(--azul-claro); }
+  .sub { margin: 20px 0 0; font-size: 34px; line-height: 1.4; color: rgba(246,244,239,.78); max-width: 760px; }
+  .reglas { position: absolute; left: 96px; bottom: 150px; display: flex; flex-wrap: wrap; gap: 10px; width: 1010px; }
+  .reglas span { padding: 9px 17px; border-radius: 999px; border: 2px solid rgba(141,182,232,.45); font-size: 24px; font-weight: 500; }
+  .firma { position: absolute; left: 96px; bottom: 72px; font-size: 26px; letter-spacing: .02em; color: rgba(246,244,239,.6); }
+  .ventana { position: absolute; border-radius: 18px; overflow: hidden; box-shadow: 0 0 0 2px rgba(255,255,255,.12), 0 40px 90px rgba(0,0,0,.55); background: #fff; }
+  .ventana img { display: block; width: 100%; height: 100%; }
+  .v1 { right: 190px; top: 70px; width: 600px; height: 933px; }
+  .v2 { right: 70px; top: 250px; width: 440px; height: 685px; transform: translateX(0); }
+  .v1, .v2 { transform-origin: center; }
+</style></head>
+<body>
+<div id="cover">
+  <div class="motivo" aria-hidden="true"></div>
+  <div class="texto">
+    <h1>Repaso</h1>
+    <p class="tag" id="tag"></p>
+    <p class="sub" id="sub"></p>
+  </div>
+  <div class="reglas" id="reglas"></div>
+  <p class="firma">Nehemias Pérez · nehemiasperez.com</p>
+  <div class="ventana v1"><img id="img1" alt=""></div>
+  <div class="ventana v2"><img id="img2" alt=""></div>
+</div>
+<script>
+  const lang = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'es';
+  const T = {
+    es: { tag: 'Audita y ordena sus diseños', sub: 'Contraste, capas sin nombre, estilos, espaciado, estados y textos. Con la corrección a un clic y Ctrl+Z.', reglas: ['Accesibilidad', 'Orden', 'Estilos', 'Espaciado', 'Componentes', 'Textos'] },
+    en: { tag: 'Audit and tidy your designs', sub: 'Contrast, unnamed layers, styles, spacing, states and copy. One-click fixes you can undo with Ctrl+Z.', reglas: ['Accessibility', 'Order', 'Styles', 'Spacing', 'Components', 'Copy'] },
+  }[lang];
+  document.getElementById('tag').textContent = T.tag;
+  document.getElementById('sub').textContent = T.sub;
+  document.getElementById('reglas').innerHTML = T.reglas.map((r) => `<span>${r}</span>`).join('');
+  // Motivo de cuadros: 7 × 4, se desvanece en diagonal (igual que el del plugin).
+  const grid = [[1,1,1,1,.5,.5,0],[1,1,1,.5,.5,0,0],[1,1,.5,.5,0,0,0],[1,.5,.5,0,0,0,0]];
+  document.querySelector('.motivo').innerHTML = grid.flat().map((v) => `<i style="opacity:${v}"></i>`).join('');
+  const q = new URLSearchParams(location.search);
+  document.getElementById('img1').src = q.get('a') || '';
+  document.getElementById('img2').src = q.get('b') || '';
+</script>
+</body></html>

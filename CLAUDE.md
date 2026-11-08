@@ -19,6 +19,7 @@ Proyecto personal de Nehemias Pérez (Diseñador UI/UX) para su sección «Labor
 ## Comandos
 - `npm run build` → `dist/code.js` + `dist/ui.html`. `npm run watch` reconstruye al guardar.
 - `npm test` · `npm run coverage` · `npm run typecheck`
+- `npm run build:community` → `dist-community/` (sin IA ni red, para publicar; ver `docs/publicacion.md`). `npm run check:gallery`, `npm run screenshots`, `node scripts/make-assets.mjs` (ícono y portada), `npm run eval:all`.
 - `npm run preview` → galería de estados en el navegador (http://localhost:5173), sin abrir Figma.
 
 ## Cargar el plugin en Figma (modo desarrollo)
@@ -59,3 +60,4 @@ Proyecto personal de Nehemias Pérez (Diseñador UI/UX) para su sección «Labor
 - **La IA nunca toca las reglas**: solo agrega nombres, notas de estados, hallazgos de texto (`ai-*`) y el resumen. Un test comprueba que la lista de reglas queda intacta.
 - **Control de costo**: lotes (40 nombres / 8 sets / 60 textos), textos repetidos se envían una vez, caché por archivo en `setPluginData('aiCache')` (clave = hash de la estructura; la de botones incluye todas las etiquetas porque las mayúsculas dependen del conjunto), estimado y confirmación en archivos grandes (>120 elementos o >0,02 USD) y tope por revisión que corta y avisa.
 - **Lo que se envía**: nombre, tipo, tamaño, layout, posición relativa y textos de hijos; colores solo de variantes de componente. Un test verifica que no salgan colores ni imágenes en nombres y textos.
+- **Dos compilaciones (`__AI__` de esbuild)**: Figma «generalmente no aprueba» plugins con clave de API de otro proveedor de IA; la versión comunidad no contiene código de IA ni red (`allowedDomains: ["none"]`) y un test lo verifica. La bandera se escribe inline (`typeof __AI__ === 'undefined' || __AI__`) porque esbuild no pliega constantes entre archivos.

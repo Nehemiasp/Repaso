@@ -1,11 +1,10 @@
 // Hilo principal del plugin: único lugar con la API de Figma. La interfaz vive en otro iframe.
 import { APP_VERSION } from '../shared/constants';
-import { AiError, checkKey, type FetchLike } from '../ai';
 import { applyFixes, buildPreview } from '../fixes';
 import { figmaPort } from '../fixes/figmaPort';
-import { KEY_CHECK_MESSAGE } from '../shared/aiErrors';
 import type { ToPlugin, ToUi } from '../shared/messages';
 import type { Finding, Scene } from '../shared/types';
+import { doCheckKey } from './keycheck';
 import { runReview } from './review';
 import * as store from './storage';
 
@@ -83,22 +82,9 @@ async function main() {
         pendingAi?.(msg.run);
         pendingAi = null;
         break;
-      case 'check-key': {
-        const key = msg.key ?? (await store.loadKey());
-        if (!key) {
-          post({ type: 'key-check', ok: false, kind: 'ai-key-invalid', detail: 'Primero pegue una clave.' });
-          break;
-        }
-        try {
-          await checkKey(key, fetch as unknown as FetchLike);
-          post({ type: 'key-check', ok: true });
-        } catch (e) {
-          const kind = e instanceof AiError ? e.kind : 'unknown';
-          const base = KEY_CHECK_MESSAGE[kind] ?? 'No se pudo comprobar la clave.';
-          post({ type: 'key-check', ok: false, kind, detail: `${base}${e instanceof AiError ? ` (${e.detail})` : ''}` });
-        }
+      case 'check-key':
+        if (typeof __AI__ === 'undefined' || __AI__) await doCheckKey(msg.key, post);
         break;
-      }
       case 'select-node':
         await selectNode(msg.nodeId);
         break;
@@ -121,11 +107,12 @@ async function main() {
         settings = store.mergeSettings(msg.settings);
         await store.saveSettings(settings);
         break;
-      case 'save-key': {
-        await store.saveKey(msg.key);
-        post({ type: 'settings', settings, hasApiKey: true, keyHint: store.keyHint(msg.key) });
+      case 'save-key':
+        if (typeof __AI__ === 'undefined' || __AI__) {
+          await store.saveKey(msg.key);
+          post({ type: 'settings', settings, hasApiKey: true, keyHint: store.keyHint(msg.key) });
+        }
         break;
-      }
       case 'clear-key':
         await store.clearKey();
         post({ type: 'settings', settings, hasApiKey: false });

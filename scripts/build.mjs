@@ -3,14 +3,20 @@ import { build, context } from 'esbuild';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 
 const watch = process.argv.includes('--watch');
-await mkdir('dist', { recursive: true });
+// --no-ai: compilación «comunidad» (sin código de IA ni red). --out <dir>: carpeta de salida.
+const noAi = process.argv.includes('--no-ai');
+const outIdx = process.argv.indexOf('--out');
+const OUT = outIdx >= 0 ? process.argv[outIdx + 1] : noAi ? 'dist-community' : 'dist';
+await mkdir(OUT, { recursive: true });
+const define = { __AI__: noAi ? 'false' : 'true' };
 
-const common = { bundle: true, logLevel: 'info', legalComments: 'none' };
+// En la compilación sin IA se pliegan las constantes para que el código de IA se elimine del paquete.
+const common = { bundle: true, logLevel: 'info', legalComments: 'none', define, minifySyntax: noAi };
 
 const codeOptions = {
   ...common,
   entryPoints: ['src/plugin/main.ts'],
-  outfile: 'dist/code.js',
+  outfile: `${OUT}/code.js`,
   format: 'iife',
   target: 'es2019',
   platform: 'neutral',
@@ -19,7 +25,7 @@ const codeOptions = {
 const uiOptions = {
   ...common,
   entryPoints: { ui: 'src/ui/index.tsx' },
-  outdir: 'dist/.ui',
+  outdir: `${OUT}/.ui`,
   format: 'iife',
   target: 'es2019',
   minify: !watch,
@@ -30,8 +36,8 @@ const uiOptions = {
 
 async function inlineUi() {
   const [js, css] = await Promise.all([
-    readFile('dist/.ui/ui.js', 'utf8'),
-    readFile('dist/.ui/ui.css', 'utf8').catch(() => ''),
+    readFile(`${OUT}/.ui/ui.js`, 'utf8'),
+    readFile(`${OUT}/.ui/ui.css`, 'utf8').catch(() => ''),
   ]);
   // El cierre de </script> dentro del JS rompería el HTML.
   const safeJs = js.replace(/<\/script/gi, '<\\/script');
@@ -49,7 +55,17 @@ async function inlineUi() {
 </body>
 </html>
 `;
-  await writeFile('dist/ui.html', html);
+  await writeFile(`${OUT}/ui.html`, html);
+  if (noAi) await writeCommunityManifest();
+}
+
+/** Manifiesto de la versión sin IA: sin acceso a red. */
+async function writeCommunityManifest() {
+  const m = JSON.parse(await readFile('manifest.json', 'utf8'));
+  m.main = 'code.js';
+  m.ui = 'ui.html';
+  m.networkAccess = { allowedDomains: ['none'] };
+  await writeFile(`${OUT}/manifest.json`, JSON.stringify(m, null, 2) + '\n');
 }
 
 const inlinePlugin = {

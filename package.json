@@ -20,7 +20,8 @@
     "screenshots": "node scripts/screenshots.mjs",
     "check:gallery": "node scripts/check-gallery.mjs",
     "eval:report": "tsx evals/report.ts",
-    "eval:all": "npm run eval:rules && npm run eval:perf && npm run eval:report"
+    "eval:all": "npm run eval:rules && npm run eval:perf && npm run eval:report",
+    "build:community": "node scripts/build.mjs --no-ai"
   },
   "devDependencies": {
     "@figma/plugin-typings": "^1.142.0",
@@ -31,5 +32,8 @@
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vitest": "^5.1.0"
-  }
+  },
+  "sideEffects": [
+    "*.css"
+  ]
 }

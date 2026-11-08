@@ -2,6 +2,7 @@ import { Button, Cuadros, Icon, Screen, type IconName } from '../components';
 import { t } from '../i18n/es';
 import './Screens.css';
 
+
 export interface WelcomeProps {
   onStart: () => void;
   onSettings: () => void;
@@ -30,7 +31,7 @@ export function Welcome({ onStart, onSettings, onAbout }: WelcomeProps) {
           <p class="rp-welcome__tag">{t.tagline}</p>
         </div>
         <ul class="rp-welcome__list">
-          {t.welcome.lines.map((l) => (
+          {((typeof __AI__ === 'undefined' || __AI__) ? t.welcome.lines : t.welcome.linesLocal).map((l) => (
             <li key={l.icon} class="rp-welcome__item">
               <span class="rp-welcome__icon"><Icon name={l.icon as IconName} size={18} /></span>
               <span>{l.text}</span>

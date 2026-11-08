@@ -6,3 +6,4 @@ coverage
 .DS_Store
 preview-dist
 docs/assets/video/*.webm
+dist-community
