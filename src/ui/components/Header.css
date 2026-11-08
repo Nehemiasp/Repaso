@@ -1,0 +1,4 @@
+.rp-header { display: flex; align-items: center; gap: var(--rp-space-2); flex: none; min-height: var(--rp-header-height); padding: 0 var(--rp-space-3) 0 var(--rp-space-3); border-bottom: 1px solid var(--rp-border); background: var(--rp-bg); }
+.rp-header__brand { display: grid; place-items: center; width: var(--rp-control-md); }
+.rp-header__title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--rp-text-lg); font-weight: var(--rp-weight-bold); line-height: var(--rp-leading-tight); }
+.rp-header__actions { display: flex; align-items: center; gap: 2px; }

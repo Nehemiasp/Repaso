@@ -183,6 +183,7 @@ export interface Finding {
   severity: Severity;
   nodeId: string;
   nodeName: string;
+  nodeType: NodeType;
   /** Texto corto en español. */
   message: string;
   /** Explicación opcional (valores medidos, umbrales). */

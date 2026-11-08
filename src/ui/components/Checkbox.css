@@ -1,0 +1,12 @@
+.rp-check { position: relative; display: inline-flex; align-items: center; gap: var(--rp-space-2); font-size: var(--rp-text-sm); cursor: pointer; }
+.rp-check__input { position: absolute; opacity: 0; width: 18px; height: 18px; margin: 0; cursor: pointer; }
+.rp-check__box {
+  display: grid; place-items: center; flex: none; width: 18px; height: 18px;
+  border: 1.5px solid var(--rp-border-strong); border-radius: var(--rp-radius-sm); background: var(--rp-bg);
+  color: var(--rp-on-accent);
+  transition: background var(--rp-duration-fast) var(--rp-ease), border-color var(--rp-duration-fast) var(--rp-ease);
+}
+.rp-check__input:checked + .rp-check__box,
+.rp-check__input:indeterminate + .rp-check__box { background: var(--rp-accent); border-color: var(--rp-accent); }
+.rp-check__input:focus-visible + .rp-check__box { box-shadow: var(--rp-focus-ring); }
+.rp-check__input:disabled + .rp-check__box { opacity: 0.5; }

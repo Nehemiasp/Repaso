@@ -26,6 +26,7 @@ export function makeFinding(
     severity: extra.severity ?? rule.severity,
     nodeId: node.id,
     nodeName: node.name,
+    nodeType: node.type,
     message: extra.message,
     status: extra.status ?? 'fail',
     ...(extra.detail !== undefined ? { detail: extra.detail } : {}),

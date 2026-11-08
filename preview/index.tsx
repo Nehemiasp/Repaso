@@ -1,4 +1,5 @@
 import { render } from 'preact';
-import '../src/ui/styles/base.css';
+import './preview.css';
+import { Gallery } from './Gallery';
 
-render(<h1>Galería de estados (fase 0)</h1>, document.getElementById('app')!);
+render(<Gallery />, document.getElementById('app')!);

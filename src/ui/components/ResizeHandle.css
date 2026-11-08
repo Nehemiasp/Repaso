@@ -1,0 +1,2 @@
+.rp-resize { position: absolute; right: 0; bottom: 0; z-index: 40; display: grid; place-items: end; width: 20px; height: 20px; padding: 3px; border: 0; background: transparent; color: var(--rp-text-secondary); cursor: nwse-resize; touch-action: none; }
+.rp-resize:hover { color: var(--rp-text); }

@@ -1,0 +1,5 @@
+.rp-progress { position: relative; height: 6px; overflow: hidden; border-radius: var(--rp-radius-full); background: var(--rp-bg-sunken); }
+.rp-progress__bar { height: 100%; border-radius: inherit; background: var(--rp-accent); transition: width var(--rp-duration) var(--rp-ease); }
+.rp-progress.is-indeterminate .rp-progress__bar { position: absolute; width: 40%; animation: rp-indeterminate 1.2s var(--rp-ease) infinite; }
+@keyframes rp-indeterminate { from { left: -40%; } to { left: 100%; } }
+@media (prefers-reduced-motion: reduce) { .rp-progress.is-indeterminate .rp-progress__bar { animation: none; left: 0; width: 100%; opacity: 0.5; } }

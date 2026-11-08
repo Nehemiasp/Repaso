@@ -40,7 +40,8 @@ function checkNode(node: DocNode, ctx: RuleContext): Finding[] {
   return out;
 }
 
-function finish(all: Finding[], nodeCount: number, ignored: ReadonlySet<string>): ReviewResult {
+/** Arma el resultado a partir de todos los hallazgos, sin los ignorados. También lo usa la UI al ignorar. */
+export function buildResult(all: Finding[], nodeCount: number, ignored: ReadonlySet<string>): ReviewResult {
   const findings = all.filter((f) => !ignored.has(f.id));
   return {
     findings,
@@ -64,7 +65,7 @@ export function runRules(
   const nodes = orderedNodes(scene);
   const all: Finding[] = [];
   for (const node of nodes) all.push(...checkNode(node, ctx));
-  return finish(all, nodes.length, ignored);
+  return buildResult(all, nodes.length, ignored);
 }
 
 export interface AsyncRunOptions {
@@ -100,5 +101,5 @@ export async function runRulesAsync(
   }
   opts.onProgress?.(nodes.length, nodes.length);
   if (opts.signal?.cancelled) return null;
-  return finish(all, nodes.length, opts.ignored ?? new Set());
+  return buildResult(all, nodes.length, opts.ignored ?? new Set());
 }

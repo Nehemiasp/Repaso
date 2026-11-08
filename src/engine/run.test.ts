@@ -106,7 +106,7 @@ describe('runRulesAsync', () => {
 
 describe('puntaje explicable', () => {
   const f = (ruleId: Finding['ruleId'], severity: Finding['severity'], n = 1): Finding[] =>
-    Array.from({ length: n }, (_, i) => ({ id: `${ruleId}:${i}:${severity}`, ruleId, category: 'order', severity, nodeId: String(i), nodeName: '', message: '', status: 'fail' }));
+    Array.from({ length: n }, (_, i) => ({ id: `${ruleId}:${i}:${severity}`, ruleId, category: 'order', severity, nodeId: String(i), nodeName: '', nodeType: 'FRAME', message: '', status: 'fail' }));
   it('sin hallazgos = 100', () => {
     expect(computeScore([])).toEqual({ score: 100, penalty: 0, breakdown: [] });
   });
