@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Si llega un push nuevo a la misma rama, se cancela la corrida anterior.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    name: Pruebas, tipos y compilación
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Tipos (TypeScript estricto)
+        run: npm run typecheck
+      - name: Pruebas y cobertura del motor (umbral 100 %)
+        run: npx vitest run --coverage
+      - name: Compilar la versión completa
+        run: npm run build
+      - name: Compilar la versión sin IA
+        run: npm run build:community
+      - name: Evaluación de reglas sin IA
+        run: npm run eval:rules
+
+  galeria:
+    name: Galería en un navegador real
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # Playwright no es dependencia del proyecto: solo la usan las herramientas de capturas y verificación.
+      - name: Instalar Playwright y Chromium
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Instalar Inter (la fuente de Figma) para que las medidas coincidan
+        run: sudo apt-get install -y fonts-inter
+      - name: Revisar desbordes, teclado y foco (42 pantallas × 3 tamaños)
+        run: npm run check:gallery

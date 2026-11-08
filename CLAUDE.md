@@ -20,6 +20,7 @@ Proyecto personal de Nehemias Pérez (Diseñador UI/UX) para su sección «Labor
 - `npm run build` → `dist/code.js` + `dist/ui.html`. `npm run watch` reconstruye al guardar.
 - `npm test` · `npm run coverage` · `npm run typecheck`
 - `npm run build:community` → `dist-community/` (sin IA ni red, para publicar; ver `docs/publicacion.md`). `npm run check:gallery`, `npm run screenshots`, `node scripts/make-assets.mjs` (ícono y portada), `npm run eval:all`.
+- CI (`.github/workflows/ci.yml`): tipos, pruebas con cobertura, las dos compilaciones y `eval:rules`; y la galería en un navegador real. Mismo resultado en local con esos comandos.
 - `npm run preview` → galería de estados en el navegador (http://localhost:5173), sin abrir Figma.
 
 ## Cargar el plugin en Figma (modo desarrollo)
