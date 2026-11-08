@@ -40,6 +40,13 @@ export function FindingRow({ finding, onSelect, onFix, onIgnore, showCategory }:
           <span class="rp-row__layername" title={finding.nodeName}>{finding.nodeName || NODE_TYPE_LABEL[finding.nodeType]}</span>
         </span>
         {finding.detail && <span class="rp-row__detail">{finding.detail}</span>}
+        {finding.suggestion && (
+          <span class="rp-row__sug">
+            <span class="rp-row__suglabel">{t.results.suggestion}</span>
+            {finding.suggestion.color && <span class="rp-row__swatch" style={{ background: finding.suggestion.color }} aria-hidden="true" />}
+            <span class="rp-row__sugtext">{finding.suggestion.text}</span>
+          </span>
+        )}
         {finding.aiNote && (
           <span class="rp-row__ai">
             <span class="rp-row__ailabel"><Icon name="sparkle" size={12} /> {t.results.aiLabel}</span>

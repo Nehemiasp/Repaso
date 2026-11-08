@@ -19,6 +19,10 @@ describe('buildReport', () => {
     expect(md).toContain('## Orden (1)');
     expect(md).toContain('| contrast | 1 | −5 |');
   });
+  it('incluye la sugerencia automática', () => {
+    const md = buildReport({ findings: [f({ suggestion: { text: 'Oscurezca el texto a #767676 (4,5:1).', color: '#767676' } })], ignoredIds: [], meta });
+    expect(md).toContain('Sugerencia: Oscurezca el texto a #767676 (4,5:1).');
+  });
   it('marca los no verificados con texto', () => {
     const md = buildReport({ findings: [f({ status: 'unverifiable', severity: 'low' })], ignoredIds: [], meta });
     expect(md).toContain('**No verificado**');

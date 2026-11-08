@@ -30,6 +30,15 @@ describe('contrast', () => {
     expect(f).toMatchObject({ ruleId: 'contrast', severity: 'high', status: 'fail', category: 'accessibility' });
     expect(f!.message).toContain('3,');
     expect(f!.detail).toContain('texto normal');
+    // Sugerencia: oscurecer hasta un color que cumple, con muestra de color.
+    expect(f!.suggestion).toEqual({ text: 'Oscurezca el texto a #767676 (4,5:1).', color: '#767676' });
+  });
+  it('sobre fondo oscuro sugiere aclarar; si no hay solución, dice que cambie el fondo', () => {
+    const dark = run('contrast', on('#444444', '#111111'), 't')[0]!;
+    expect(dark.suggestion!.text).toMatch(/^Aclare el texto a #[0-9A-F]{6} \(\d,\d:1\)\.$/);
+    expect(dark.suggestion!.color).toMatch(/^#[0-9A-F]{6}$/);
+    const none = run('contrast', on('#999999', '#777777'), 't', { contrastLevel: 'AAA' })[0]!;
+    expect(none.suggestion).toEqual({ text: 'Ningún color de texto llega a ese nivel sobre este fondo: cambie el fondo.' });
   });
   it('reprueba como crítica bajo 3:1', () => {
     const [f] = run('contrast', on('#BBBBBB', '#FFFFFF'), 't');
@@ -87,7 +96,7 @@ describe('text-small', () => {
     expect(run('text-small', scene(text('t', 'x', { fontSize: 12 })), 't')).toEqual([]);
   });
   it('media entre 10 y el mínimo, alta bajo 10', () => {
-    expect(run('text-small', scene(text('t', 'x', { fontSize: 11 })), 't')[0]).toMatchObject({ severity: 'medium', message: 'Texto muy pequeño (11 px)' });
+    expect(run('text-small', scene(text('t', 'x', { fontSize: 11 })), 't')[0]).toMatchObject({ severity: 'medium', message: 'Texto muy pequeño (11 px)', suggestion: { text: 'Suba el texto a 12 px o más.' } });
     expect(run('text-small', scene(text('t', 'x', { fontSize: 9.5 })), 't')[0]).toMatchObject({ severity: 'high', message: 'Texto muy pequeño (9,5 px)' });
   });
   it('respeta el umbral configurable', () => {
@@ -102,7 +111,11 @@ describe('text-small', () => {
 describe('touch-target', () => {
   const btn = (w: number, h: number, name = 'Botón') => scene(node('b', 'INSTANCE', { name, box: box(w, h) }));
   it('marca interactivos pequeños', () => {
-    expect(run('touch-target', btn(32, 24), 'b')[0]).toMatchObject({ severity: 'high', message: 'Área táctil de 32 × 24 px' });
+    const t = run('touch-target', btn(32, 24), 'b')[0]!;
+    expect(t).toMatchObject({ severity: 'high', message: 'Área táctil de 32 × 24 px' });
+    // La sugerencia no empuja a un cuadrado: mantiene el alto y deja que el ancho siga al texto.
+    expect(t.suggestion!.text).toContain('mantenga el alto en 44 px');
+    expect(t.suggestion!.text).toContain('sin forzar un cuadrado');
   });
   it('aprueba el tamaño recomendado', () => {
     expect(run('touch-target', btn(44, 44), 'b')).toEqual([]);

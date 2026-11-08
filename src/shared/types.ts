@@ -198,6 +198,8 @@ export interface Finding {
   aiNote?: string;
   /** Estados que faltan en un set de componentes (para la IA). */
   missing?: string[];
+  /** Sugerencia automática (no cambia nada sola). `color` = hex para mostrar una muestra. */
+  suggestion?: { text: string; color?: string };
 }
 
 export type ContrastLevel = 'AA' | 'AAA';

@@ -1,5 +1,5 @@
 import type { ContrastLevel, DocNode, Rgb, Scene } from '../shared/types';
-import { blend, contrastRatio } from './color';
+import { blend, contrastRatio, luminance } from './color';
 
 export type Background =
   | { kind: 'color'; color: Rgb }
@@ -87,6 +87,34 @@ export function isLargeText(fontSize: number, fontWeight: number): boolean {
 export function requiredRatio(level: ContrastLevel, large: boolean): number {
   if (level === 'AAA') return large ? 4.5 : 7;
   return large ? 3 : 4.5;
+}
+
+const BLACK: Rgb = { r: 0, g: 0, b: 0 };
+const WHITE: Rgb = { r: 1, g: 1, b: 1 };
+const quantize = (c: Rgb): Rgb => ({ r: Math.round(c.r * 255) / 255, g: Math.round(c.g * 255) / 255, b: Math.round(c.b * 255) / 255 });
+
+/**
+ * Color de texto más cercano al actual que llega al contraste pedido sobre `bg`: se mueve hacia negro o
+ * hacia blanco (el que primero alcanza el nivel; sobre fondo claro, negro) lo mínimo necesario.
+ * Devuelve null si ni negro ni blanco llegan (por ejemplo, AAA sobre un gris medio): ahí hay que cambiar el fondo.
+ */
+export function suggestForeground(fg: Rgb, bg: Rgb, required: number): { color: Rgb; ratio: number } | null {
+  const targets = luminance(bg) > 0.179 ? [BLACK, WHITE] : [WHITE, BLACK];
+  for (const target of targets) {
+    if (contrastRatio(target, bg) < required) continue;
+    // Se compara el color ya redondeado a 8 bits: es el que Figma va a guardar.
+    const at = (t: number) => quantize(blend(target, t, fg));
+    let lo = 0;
+    let hi = 1;
+    for (let i = 0; i < 24; i++) {
+      const mid = (lo + hi) / 2;
+      if (contrastRatio(at(mid), bg) >= required) hi = mid;
+      else lo = mid;
+    }
+    const color = at(hi);
+    return { color, ratio: contrastRatio(color, bg) };
+  }
+  return null;
 }
 
 export { contrastRatio };

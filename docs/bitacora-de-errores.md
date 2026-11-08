@@ -13,6 +13,7 @@ Material para historias del portafolio: cada error que apareció al construir Re
 | E004 | El «100» no cabía en el anillo | Captura del estado «Sin problemas» | El tamaño del texto debe depender del tamaño del contenedor |
 | E005 | «Resultados» no mostraba ni un hallazgo | Captura de la pantalla a 560 px de alto | Una pantalla correcta de 800 px puede ser inútil en 560 |
 | E006 | La hoja de lote abría con el foco pintado en «Cerrar» | Captura en tema oscuro | El foco inicial es una decisión de diseño, no un detalle |
+| E007 | Un botón de 44 × 44 «cumple» pero se ve mal | Nehemias siguió la sugerencia al pie de la letra, probando el plugin en Figma | Una regla cumplida al pie de la letra puede dar mal diseño: la sugerencia debe describir la intención |
 
 ---
 
@@ -57,6 +58,13 @@ Material para historias del portafolio: cada error que apareció al construir Re
 **Causa:** al abrir un diálogo mandaba el foco al primer elemento enfocable, que es el botón de cerrar.
 **Arreglo:** el foco va al propio diálogo (`tabIndex={-1}`), para que Tab llegue después a la primera casilla. El diálogo sigue atrapando el foco y Esc lo cierra.
 **Lección:** dónde cae el foco al abrir algo es una decisión de accesibilidad con efecto visual.
+
+## E007 · Un botón de 44 × 44 «cumple» pero se ve mal
+**Se veía:** Repaso marcó «Área táctil de 32 × 24 px, lo recomendado es al menos 44 × 44 px». Se redimensionó el botón a **44 × 44**: el hallazgo desapareció, pero el botón quedó cuadrado y la palabra «Botón» apretada contra los bordes. La regla daba por bueno un diseño malo.
+**Capturas:** `E007-boton-44x44-cumple-pero-no-sirve/antes/boton-44x44.png` (captura de Nehemias en Figma) → `despues/boton-120x44.png` (reconstrucción del resultado correcto: mismo estilo, 120 × 44).
+**Causa:** el mensaje decía «al menos 44 × 44 px», que invita a hacer un cuadrado. La regla mide el **área táctil**, no la proporción; un botón con texto necesita 44 de alto y el ancho que pida su contenido.
+**Arreglo:** la sugerencia ahora dice *«Deje al menos 44 px de alto y de ancho. En un botón con texto, mantenga el alto en 44 px y deje que el ancho se ajuste al texto, sin forzar un cuadrado.»* La regla sigue exigiendo 44 px en ambas direcciones (es lo que pide la accesibilidad); lo que cambió fue explicar la intención.
+**Lección:** una regla puede cumplirse al pie de la letra y aun así dar mal resultado. Un verificador automático necesita sugerencias que expliquen **para qué** es la regla, no solo el número.
 
 ---
 

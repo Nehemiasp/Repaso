@@ -14,6 +14,7 @@ export const textSmallRule: Rule = {
         severity: size < 10 ? 'high' : 'medium',
         message: `Texto muy pequeño (${fmt(size, size % 1 ? 1 : 0)} px)`,
         detail: `El mínimo configurado es ${settings.minTextSize} px.`,
+        suggestion: { text: `Suba el texto a ${settings.minTextSize} px o más.` },
       }),
     ];
   },

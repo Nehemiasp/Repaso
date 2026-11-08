@@ -196,6 +196,7 @@ export const t = {
     showMore: (n: number) => `Mostrar ${n} más`,
     selectLayer: 'Seleccionar capa en Figma',
     aiLabel: 'IA',
+    suggestion: 'Sugerencia',
     emptyCategory: 'No hay hallazgos en esta categoría.',
     summaryTitle: 'Resumen',
     summaryBy: 'Redactado por la IA',

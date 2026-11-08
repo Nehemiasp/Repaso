@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { box, frame, gradient, image, rect, scene, solid, text } from '../../tests/builders';
-import { toHex } from './color';
-import { isLargeText, requiredRatio, resolveBackground, topFill } from './contrast';
+import { luminance as luminanceOf, toHex } from './color';
+import { fromHex, contrastRatio } from './color';
+import { isLargeText, requiredRatio, resolveBackground, suggestForeground, topFill } from './contrast';
 
 const bgOf = (s: ReturnType<typeof scene>, id = 't') => resolveBackground(s, s.nodes[id]!);
 const hexOf = (s: ReturnType<typeof scene>): string => {
@@ -71,6 +72,38 @@ describe('resolveBackground', () => {
 describe('topFill', () => {
   it('sin relleno visible → none', () => {
     expect(topFill(scene(rect('r')).nodes.r!)).toEqual({ kind: 'none' });
+  });
+});
+
+describe('suggestForeground', () => {
+  const white = fromHex('#FFFFFF');
+  it('oscurece lo mínimo necesario sobre fondo claro y llega al nivel pedido', () => {
+    const s = suggestForeground(fromHex('#B0B0B0'), white, 4.5)!;
+    expect(s.ratio).toBeGreaterThanOrEqual(4.5);
+    expect(s.ratio).toBeLessThan(4.7); // lo mínimo: no salta a negro
+    expect(toHex(s.color)).toBe('#767676');
+    expect(contrastRatio(s.color, white)).toBeCloseTo(s.ratio, 6);
+  });
+  it('conserva el matiz (sigue siendo azulado)', () => {
+    const s = suggestForeground(fromHex('#8DB6E8'), white, 4.5)!;
+    expect(s.color.b).toBeGreaterThan(s.color.r);
+  });
+  it('aclara sobre fondo oscuro', () => {
+    const s = suggestForeground(fromHex('#444444'), fromHex('#111111'), 4.5)!;
+    expect(luminanceOf(s.color)).toBeGreaterThan(luminanceOf(fromHex('#444444')));
+    expect(s.ratio).toBeGreaterThanOrEqual(4.5);
+  });
+  it('sobre un gris medio, si el negro no llega prueba con blanco; si ninguno llega, devuelve null', () => {
+    expect(suggestForeground(fromHex('#999999'), fromHex('#777777'), 4.5)).not.toBeNull();
+    expect(suggestForeground(fromHex('#999999'), fromHex('#777777'), 7)).toBeNull();
+    // Fondo oscuro y medio: el orden de prueba es blanco, luego negro.
+    const s = suggestForeground(fromHex('#333333'), fromHex('#0000A0'), 4.5)!;
+    expect(s.ratio).toBeGreaterThanOrEqual(4.5);
+  });
+  it('un color que ya cumple no se mueve', () => {
+    const s = suggestForeground(fromHex('#000000'), white, 4.5)!;
+    expect(toHex(s.color)).toBe('#000000');
+    expect(s.ratio).toBeCloseTo(21, 5);
   });
 });
 

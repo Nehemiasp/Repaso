@@ -1,5 +1,5 @@
-import { blend, contrastRatio } from '../color';
-import { isLargeText, requiredRatio, resolveBackground, topFill } from '../contrast';
+import { blend, contrastRatio, luminance, toHex } from '../color';
+import { isLargeText, requiredRatio, resolveBackground, suggestForeground, topFill } from '../contrast';
 import { fmt } from '../format';
 import { makeFinding, type Rule } from './types';
 
@@ -30,11 +30,19 @@ export const contrastRule: Rule = {
     const large = isLargeText(node.text.fontSize, node.text.fontWeight);
     const required = requiredRatio(settings.contrastLevel, large);
     if (ratio >= required) return [];
+    const s = suggestForeground(color, bg.color, required);
+    const suggestion = s
+      ? {
+          text: `${luminance(s.color) < luminance(color) ? 'Oscurezca' : 'Aclare'} el texto a ${toHex(s.color)} (${fmt(s.ratio, 1)}:1).`,
+          color: toHex(s.color),
+        }
+      : { text: 'Ningún color de texto llega a ese nivel sobre este fondo: cambie el fondo.' };
     return [
       makeFinding(meta, node, {
         severity: ratio < 3 ? 'critical' : 'high',
         message: `Contraste insuficiente (${fmt(ratio, 2)}:1)`,
         detail: `Nivel ${settings.contrastLevel} pide ${fmt(required, 1)}:1 para texto ${large ? 'grande' : 'normal'}.`,
+        suggestion,
       }),
     ];
   },

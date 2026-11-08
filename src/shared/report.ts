@@ -31,6 +31,7 @@ function line(f: Finding, detail: boolean): string {
   const tag = f.status === 'unverifiable' ? 'No verificado' : SEVERITY[f.severity];
   const parts = [`- ${MARK[f.severity]} **${tag}** · ${esc(f.message)} — capa «${esc(f.nodeName)}»`];
   if (detail && f.detail) parts.push(`  - ${esc(f.detail)}`);
+  if (f.suggestion) parts.push(`  - Sugerencia: ${esc(f.suggestion.text)}`);
   if (f.fix?.kind === 'rename') parts.push(`  - Nombre sugerido: ${esc(f.fix.suggested)}`);
   return parts.join('\n');
 }
