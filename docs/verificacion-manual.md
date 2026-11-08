@@ -1,5 +1,7 @@
 # Verificación manual en Figma
 
+> Para probar paso a paso, con lo que debería pasar en cada paso y una plantilla de informe, use **[`guia-de-prueba.md`](guia-de-prueba.md)**. Esta es la lista corta de casillas.
+
 Las pruebas automáticas usan una API de Figma **simulada** (`tests/plugin.test.ts`, `src/read/read.test.ts`, `src/fixes/fixes.test.ts`). Lo que sigue solo se puede comprobar en la app de escritorio, con el archivo de `fixtures/archivo-prueba.md`. Marque cada punto.
 
 ## Preparación

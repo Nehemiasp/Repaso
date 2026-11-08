@@ -20,5 +20,5 @@ npm run eval:all          # evaluación de reglas y rendimiento → evals/report
 - Cómo cargarlo en Figma: `CLAUDE.md` → «Cargar el plugin en Figma».
 - Dónde retocar lo visual: `RETOQUES.md`.
 - Publicarlo: `docs/publicacion.md` (⚠️ lea primero el riesgo de la clave de IA).
-- Probarlo en Figma: `docs/verificacion-manual.md`.
+- **Probarlo en Figma, paso a paso: `docs/guia-de-prueba.md`** (con plantilla de informe). La lista corta está en `docs/verificacion-manual.md`.
 - Caso de estudio: `docs/caso-de-estudio.md`.
