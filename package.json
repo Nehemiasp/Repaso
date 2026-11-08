@@ -1,0 +1,32 @@
+{
+  "name": "repaso",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Plugin de Figma que audita y ordena diseños.",
+  "author": "Nehemias Pérez <https://nehemiasperez.com>",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "watch": "node scripts/build.mjs --watch",
+    "preview": "node scripts/preview.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage",
+    "eval:rules": "tsx evals/rules-clean.ts",
+    "eval:perf": "tsx evals/perf.ts",
+    "eval:names": "tsx evals/run-names.ts",
+    "eval:copy": "tsx evals/run-copy.ts",
+    "screenshots": "node scripts/screenshots.mjs"
+  },
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.142.0",
+    "@types/node": "^26.6.6",
+    "@vitest/coverage-v8": "^5.1.0",
+    "esbuild": "^0.28.2",
+    "preact": "^11.2.0",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0"
+  }
+}
