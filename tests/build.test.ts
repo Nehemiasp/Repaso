@@ -7,6 +7,8 @@ import { describe, expect, it } from 'vitest';
 
 const root = path.resolve(import.meta.dirname, '..');
 const read = (f: string) => readFileSync(path.join(root, f), 'utf8');
+/** Rutas con `/` en cualquier sistema (en Windows el separador es `\`). */
+const posix = (p: string) => p.split(path.sep).join('/');
 const walk = (dir: string): string[] =>
   readdirSync(dir).flatMap((n) => {
     const p = path.join(dir, n);
@@ -40,7 +42,7 @@ describe('arquitectura en capas', () => {
   });
   it('la interfaz no usa la API de Figma ni importa el hilo principal', () => {
     // Los textos de i18n mencionan «figma.clientStorage» como explicación, no como uso.
-    for (const f of files('src/ui').filter((x) => !x.includes('/i18n/'))) {
+    for (const f of files('src/ui').filter((x) => !posix(x).includes('/i18n/'))) {
       const src = readFileSync(f, 'utf8');
       expect(src, f).not.toMatch(/\bfigma\./);
       expect(src, f).not.toMatch(/from '\.\.\/(\.\.\/)?plugin/);
@@ -53,8 +55,8 @@ describe('claves', () => {
     const skip = /(^|\/)(node_modules|dist|dist-community|preview-dist|coverage|\.git)(\/|$)/;
     const hits: string[] = [];
     for (const f of walk(root)) {
-      if (skip.test(path.relative(root, f)) || /\.(png|jpg|webm|woff2?)$/.test(f)) continue;
-      if (/sk-ant-[A-Za-z0-9_-]{20,}/.test(readFileSync(f, 'utf8'))) hits.push(path.relative(root, f));
+      if (skip.test(posix(path.relative(root, f))) || /\.(png|jpg|webm|woff2?)$/.test(f)) continue;
+      if (/sk-ant-[A-Za-z0-9_-]{20,}/.test(readFileSync(f, 'utf8'))) hits.push(posix(path.relative(root, f)));
     }
     expect(hits).toEqual([]);
   });
@@ -67,7 +69,7 @@ describe('estilos', () => {
     for (const f of walk(path.join(root, 'src/ui')).filter((p) => /\.tsx$/.test(p) && !/\.test\./.test(p) && !/Icon\.tsx$/.test(p))) {
       readFileSync(f, 'utf8').split('\n').forEach((line, i) => {
         if (ok.test(line)) return;
-        if (/#[0-9a-fA-F]{6}\b|rgba?\(/.test(line)) bad.push(`${path.relative(root, f)}:${i + 1}: ${line.trim()}`);
+        if (/#[0-9a-fA-F]{6}\b|rgba?\(/.test(line)) bad.push(`${posix(path.relative(root, f))}:${i + 1}: ${line.trim()}`);
       });
     }
     expect(bad).toEqual([]);

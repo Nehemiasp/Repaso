@@ -15,8 +15,13 @@ permissions:
 
 jobs:
   verificar:
-    name: Pruebas, tipos y compilación
-    runs-on: ubuntu-latest
+    name: Pruebas, tipos y compilación (${{ matrix.os }})
+    # Windows también: el proyecto se desarrolla ahí y las rutas con \ ya rompieron una prueba.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
