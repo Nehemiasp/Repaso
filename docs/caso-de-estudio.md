@@ -93,7 +93,7 @@ Para sacar las capturas «después»: `npm run screenshots -- --out docs/assets/
 | Archivo limpio | 0 hallazgos, 100/100 (es un archivo pequeño que hice yo) |
 | Rendimiento, 2 000 capas (nodos simulados) | 17 ms en total; el tramo más largo sin ceder el hilo, 8 ms |
 | Rendimiento, 20 000 capas (nodos simulados) | 134 ms en total; tramo más largo, 14,6 ms |
-| Tamaño del plugin | 47 KB el código y 119 KB la interfaz (versión sin IA: código 47 KB) |
+| Tamaño del plugin | versión completa: 87 KB de código + 119 KB de interfaz; versión sin IA: 48 KB de código + 116 KB de interfaz |
 
 > **Ojo con el rendimiento:** son nodos simulados en Node. En Figma, leer cada propiedad cuesta mucho más, así que el tiempo real será mayor. Lo que sí queda demostrado es que cede el hilo cada ~8 ms. **[Medir en Figma con 2 000 capas reales y poner el número aquí.]**
 

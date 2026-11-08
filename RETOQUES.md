@@ -3,12 +3,13 @@
 Guía para que usted retoque lo visual sin buscar. Para ver todo: `npm run preview` (galería en http://localhost:5173, no necesita Figma). Cada marco de la galería es una pantalla o estado real, con datos de ejemplo del motor.
 
 ## Flujo de trabajo
-1. `npm run preview` y edite. La galería recarga sola.
+1. `npm run preview` y edite. La galería recarga sola. Además, `http://localhost:5173/demo.html` es la **interfaz real conectada a un plugin simulado** (revisar → lote → exportar funcionan de verdad; `?ai=1` con IA, `?theme=dark`).
 2. Colores, tamaños, radios, espaciados: **solo en `src/ui/styles/tokens.css`**.
 3. Forma de un componente: su `.css` junto al `.tsx` en `src/ui/components/`.
 4. Distribución de una pantalla: `src/ui/screens/Screens.css` (una sección comentada por pantalla).
 5. Textos (microcopy): **todo en `src/ui/i18n/es.ts`**.
-6. Antes de entregar: `npm test` (verifica contraste AA de los tokens) y `npm run check:gallery` (desbordes, teclado y foco en 3 tamaños).
+6. Antes de entregar: `npm test` (verifica contraste AA de los tokens y que no haya colores escritos en los `.tsx`) y `npm run check:gallery` (desbordes, teclado y foco en 3 tamaños, 42 pantallas).
+6b. Capturas «después» para el caso de estudio: `npm run screenshots -- --out docs/assets/despues <ids>`; ícono y portada: `node scripts/make-assets.mjs` (fuentes en `docs/assets/src/`).
 7. Para ver el resultado en Figma: `npm run build` y recargue el plugin (ver `CLAUDE.md`).
 
 ## Pantallas (id de la galería → archivo)
@@ -17,7 +18,8 @@ Guía para que usted retoque lo visual sin buscar. Para ver todo: `npm run previ
 | 1 | Bienvenida | `welcome` | `screens/Welcome.tsx` |
 | 2 | Inicio | `home-last`, `home-new` (sin selección), `home-page`, `home-nokey` | `screens/Home.tsx` |
 | 3 | Revisando | `reviewing-start`, `-checking`, `-ai`, `-cancelling` | `screens/Reviewing.tsx` |
-| 4 | Resultados | `results-testfile`, `results-200`, `results-long` (nombres larguísimos), `results-single` (una categoría), `results-unverified`, `results-ai`, `results-ignored` | `screens/Results.tsx` |
+| 3 | Estimado antes de usar la IA | `ai-estimate`, `ai-estimate-over` (supera el tope) | `screens/AiEstimate.tsx` |
+| 4 | Resultados | `results-testfile`, `results-200`, `results-long` (nombres larguísimos), `results-single` (una categoría), `results-unverified`, `results-ai` (notas, textos y resumen de la IA), `results-ignored` | `screens/Results.tsx` |
 | 4 | Lote con vista previa | `batch-rename` (34), `batch-color`, `batch-spacing`, `batch-loading`, `batch-applying`, `batch-applied` | `components/BatchSheet.tsx` |
 | 5 | Sin problemas | `clean`, `clean-ignored` | `Results.tsx` (`CleanView`) |
 | 6 | Errores | `error-no-selection`, `-empty-selection`, `-ai-key-invalid`, `-ai-no-credit`, `-ai-offline`, `-ai-rate-limit`, `-too-large`, `-unknown` | `screens/ErrorScreen.tsx` + textos en `i18n/es.ts` (`ERRORS`) |
@@ -32,7 +34,7 @@ Para una sola pantalla: `http://localhost:5173/?only=results-200&theme=dark&size
 | Componente | Archivos | Notas |
 |---|---|---|
 | Botón / Botón de ícono | `Button.tsx/.css` | variantes `primary`, `secondary`, `ghost`, `danger`; tamaños `sm`, `md`, `lg`; `loading` |
-| Fila de hallazgo | `FindingRow.tsx/.css` | el cuerpo es un botón (selecciona y hace zoom); Corregir e Ignorar son botones hermanos |
+| Fila de hallazgo | `FindingRow.tsx/.css` | el cuerpo es un botón (selecciona y hace zoom); Corregir e Ignorar son botones hermanos; la nota de la IA va en un recuadro con ✦ |
 | Etiqueta de severidad | `SeverityBadge.tsx/.css` | silueta distinta por severidad + palabra: nunca solo color |
 | Interruptor | `Switch.tsx/.css` | `role="switch"` |
 | Campo, campo numérico, selector | `Field.tsx/.css` | clave con mostrar/ocultar |
@@ -67,6 +69,9 @@ Para una sola pantalla: `http://localhost:5173/?only=results-200&theme=dark&size
 | Cambiar el motivo de cuadros | matrices `MINI` y `FULL` en `Cuadros.tsx` |
 | Cambiar un texto | `i18n/es.ts` |
 | Otro orden de pestañas | `CATEGORIES` en `src/shared/types.ts` |
+
+## Versión sin IA
+`npm run build:community` quita del paquete todo el código de IA y la red. En esa versión la interfaz oculta los ajustes de trato, IA y clave, el chip de IA y la tercera línea de la bienvenida (se reemplaza por su variante local, en `i18n/es.ts`: `linesLocal`, `privacyItemsLocal`). Si retoca esas pantallas, retoque también esas variantes.
 
 ## Límites conocidos
 - **Inter** se pide por nombre; Figma la tiene instalada en el equipo pero el iframe del plugin no la incrusta. Si falta, cae a la fuente del sistema. Incrustarla (woff2 en base64) sube ~100 KB al HTML.

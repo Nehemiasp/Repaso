@@ -11,4 +11,14 @@ npm test
 npm run preview    # galería de estados en el navegador
 ```
 
-Cómo cargarlo en Figma: ver `CLAUDE.md` → «Cargar el plugin en Figma».
+```bash
+npm run build:community   # versión sin IA ni red (la recomendada para publicar)
+npm run check:gallery     # revisa las 42 pantallas en un navegador real
+npm run eval:all          # evaluación de reglas y rendimiento → evals/reporte.md
+```
+
+- Cómo cargarlo en Figma: `CLAUDE.md` → «Cargar el plugin en Figma».
+- Dónde retocar lo visual: `RETOQUES.md`.
+- Publicarlo: `docs/publicacion.md` (⚠️ lea primero el riesgo de la clave de IA).
+- Probarlo en Figma: `docs/verificacion-manual.md`.
+- Caso de estudio: `docs/caso-de-estudio.md`.
