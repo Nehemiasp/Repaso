@@ -175,10 +175,13 @@ export interface SpacingChange {
   to: number;
 }
 
+/** Hallazgos que genera la IA sobre textos. Las reglas de arriba nunca pasan por la IA. */
+export type AiRuleId = 'ai-spelling' | 'ai-case' | 'ai-tone';
+
 export interface Finding {
   /** Estable entre revisiones: `${ruleId}:${nodeId}`. */
   id: string;
-  ruleId: RuleId;
+  ruleId: RuleId | AiRuleId;
   category: Category;
   severity: Severity;
   nodeId: string;
@@ -191,6 +194,10 @@ export interface Finding {
   /** 'unverifiable' = no se pudo comprobar; nunca cuenta como aprobado. */
   status: 'fail' | 'unverifiable';
   fix?: FixData;
+  /** Nota de la IA (nombre sugerido, cómo deberían verse los estados faltantes). */
+  aiNote?: string;
+  /** Estados que faltan en un set de componentes (para la IA). */
+  missing?: string[];
 }
 
 export type ContrastLevel = 'AA' | 'AAA';

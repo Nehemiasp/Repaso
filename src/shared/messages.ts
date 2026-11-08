@@ -16,6 +16,21 @@ export type ErrorKind =
 
 export type Phase = 'reading' | 'checking' | 'ai';
 
+/** Estimado de la parte con IA, para confirmar antes de gastar. */
+export interface AiEstimate {
+  layers: number;
+  texts: number;
+  sets: number;
+  calls: number;
+  inputTokens: number;
+  outputTokens: number;
+  costUsd: number;
+  budgetUsd: number;
+  /** El estimado supera el tope: la IA revisará solo una parte. */
+  overBudget: boolean;
+  model: string;
+}
+
 export interface ReviewMeta {
   scope: Scope;
   nodeCount: number;
@@ -43,6 +58,8 @@ export interface ReviewPayload {
   ignoredIds: string[];
   meta: ReviewMeta;
   aiSummary?: string;
+  /** Nombres de capa propuestos por la IA, por id de hallazgo. */
+  aiNames?: Record<string, string>;
   /** Aviso no fatal sobre la IA (tope de costo alcanzado, lote descartado…). */
   aiNotice?: string;
 }
@@ -81,6 +98,7 @@ export type ToUi =
   | { type: 'init'; payload: InitPayload }
   | { type: 'selection'; count: number }
   | { type: 'progress'; phase: Phase; done: number; total: number }
+  | { type: 'ai-estimate'; estimate: AiEstimate }
   | { type: 'result'; payload: ReviewPayload }
   | { type: 'error'; kind: ErrorKind; detail?: string; count?: number }
   | { type: 'fix-preview'; preview: FixPreview }
@@ -92,7 +110,8 @@ export type ToUi =
 
 export type ToPlugin =
   | { type: 'ready' }
-  | { type: 'review'; scope: Scope }
+  | { type: 'review'; scope: Scope; /** Solo esta revisión: sin IA. */ noAi?: boolean }
+  | { type: 'ai-decision'; run: boolean }
   | { type: 'cancel' }
   | { type: 'select-node'; nodeId: string }
   | { type: 'ignore'; ids: string[] }

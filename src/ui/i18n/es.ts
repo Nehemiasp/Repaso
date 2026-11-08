@@ -1,5 +1,5 @@
 // Todos los textos de la interfaz, en español, con trato de «usted».
-import type { Category, RuleId, Severity, NodeType } from '../../shared/types';
+import type { AiRuleId, Category, RuleId, Severity, NodeType } from '../../shared/types';
 import type { ErrorKind, FixKindGroup, Phase } from '../../shared/messages';
 
 export const plural = (n: number, one: string, many: string): string =>
@@ -21,7 +21,10 @@ export const CATEGORY_LABEL: Record<Category, string> = {
   texts: 'Textos',
 };
 
-export const RULE_LABEL: Record<RuleId, { name: string; description: string }> = {
+export const RULE_LABEL: Record<RuleId | AiRuleId, { name: string; description: string }> = {
+  'ai-spelling': { name: 'Ortografía (IA)', description: 'Faltas de ortografía y acentos en textos visibles.' },
+  'ai-case': { name: 'Mayúsculas en botones (IA)', description: 'Botones del mismo tipo con mayúsculas distintas.' },
+  'ai-tone': { name: 'Trato «tú» / «usted» (IA)', description: 'Textos que no siguen el trato elegido en Ajustes.' },
   contrast: { name: 'Contraste del texto', description: 'El texto se lee sobre su fondo (WCAG AA o AAA).' },
   'text-small': { name: 'Texto pequeño', description: 'Textos por debajo del tamaño mínimo.' },
   'touch-target': { name: 'Área táctil', description: 'Botones, campos y enlaces más chicos que lo recomendado.' },
@@ -187,6 +190,7 @@ export const t = {
     unverifiedHelp: 'No se pudo comprobar de forma automática. Revíselo a mano.',
     showMore: (n: number) => `Mostrar ${n} más`,
     selectLayer: 'Seleccionar capa en Figma',
+    aiLabel: 'IA',
     emptyCategory: 'No hay hallazgos en esta categoría.',
     summaryTitle: 'Resumen',
     summaryBy: 'Redactado por la IA',
@@ -215,6 +219,22 @@ export const t = {
     sourceAi: 'IA',
     sourceType: 'Por tipo',
     loading: 'Preparando vista previa…',
+  },
+  aiEstimate: {
+    title: 'Antes de usar la IA',
+    intro: 'Este archivo es grande. Esto es lo que la IA revisaría y cuánto costaría, aproximadamente.',
+    layers: 'Capas por nombrar',
+    texts: 'Textos por revisar',
+    sets: 'Sets de componentes',
+    calls: 'Llamadas',
+    cost: 'Costo estimado',
+    budget: 'Tope por revisión',
+    model: 'Modelo',
+    over: 'El estimado supera su tope: la IA revisará solo una parte y se lo diremos al final.',
+    cached: 'Lo que ya se revisó y no cambió no se vuelve a cobrar.',
+    run: 'Continuar con IA',
+    skip: 'Solo reglas (sin IA)',
+    sends: 'Se envían solo nombres de capas, textos y estructura. Nunca imágenes.',
   },
   errors: {
     retry: 'Reintentar',

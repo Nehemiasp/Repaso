@@ -1,7 +1,9 @@
 // Hilo principal del plugin: único lugar con la API de Figma. La interfaz vive en otro iframe.
 import { APP_VERSION } from '../shared/constants';
+import { AiError, checkKey, type FetchLike } from '../ai';
 import { applyFixes, buildPreview } from '../fixes';
 import { figmaPort } from '../fixes/figmaPort';
+import { KEY_CHECK_MESSAGE } from '../shared/aiErrors';
 import type { ToPlugin, ToUi } from '../shared/messages';
 import type { Finding, Scene } from '../shared/types';
 import { runReview } from './review';
@@ -17,6 +19,7 @@ async function main() {
   let running = false;
   let sizeTimer: ReturnType<typeof setTimeout> | undefined;
   /** Lo último que se revisó, en memoria: las correcciones se calculan sobre esto. */
+  let pendingAi: ((run: boolean) => void) | null = null;
   let session: { scene: Scene; findings: Finding[]; aiNames: Record<string, string> } | null = null;
 
   figma.on('selectionchange', () => post({ type: 'selection', count: figma.currentPage.selection.length }));
@@ -61,15 +64,41 @@ async function main() {
         running = true;
         signal = { cancelled: false };
         try {
-          const out = await runReview(msg.scope, { post, settings }, signal);
-          if (out.payload && out.scene) session = { scene: out.scene, findings: out.payload.findings, aiNames: {} };
+          const out = await runReview(
+            msg.scope,
+            { post, settings, noAi: msg.noAi, confirmAi: () => new Promise<boolean>((resolve) => (pendingAi = resolve)) },
+            signal,
+          );
+          if (out.payload && out.scene) session = { scene: out.scene, findings: out.payload.findings, aiNames: out.aiNames ?? {} };
         } finally {
           running = false;
         }
         break;
       case 'cancel':
         signal.cancelled = true;
+        pendingAi?.(false);
+        pendingAi = null;
         break;
+      case 'ai-decision':
+        pendingAi?.(msg.run);
+        pendingAi = null;
+        break;
+      case 'check-key': {
+        const key = msg.key ?? (await store.loadKey());
+        if (!key) {
+          post({ type: 'key-check', ok: false, kind: 'ai-key-invalid', detail: 'Primero pegue una clave.' });
+          break;
+        }
+        try {
+          await checkKey(key, fetch as unknown as FetchLike);
+          post({ type: 'key-check', ok: true });
+        } catch (e) {
+          const kind = e instanceof AiError ? e.kind : 'unknown';
+          const base = KEY_CHECK_MESSAGE[kind] ?? 'No se pudo comprobar la clave.';
+          post({ type: 'key-check', ok: false, kind, detail: `${base}${e instanceof AiError ? ` (${e.detail})` : ''}` });
+        }
+        break;
+      }
       case 'select-node':
         await selectNode(msg.nodeId);
         break;
@@ -130,9 +159,7 @@ async function main() {
         if (res.applied.length) figma.notify(`Repaso: ${res.applied.length} cambios aplicados. Ctrl+Z los deshace.`);
         break;
       }
-      default:
-        // Mensajes de IA (fase 4) se conectan aquí.
-        break;
+
     }
   };
 }

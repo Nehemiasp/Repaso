@@ -57,8 +57,30 @@ export const unverifiedFindings: Finding[] = run(
   ])),
 );
 
+/** Hallazgos con lo que agregaría la IA: notas, nombres y textos. */
+export const aiFindings: Finding[] = [
+  ...testFileFindings.map((f) =>
+    f.ruleId === 'layer-default-name' && f.nodeId === 'e04-frame'
+      ? { ...f, aiNote: 'Nombre sugerido por la IA: «Tarjeta / Producto»' }
+      : f.ruleId === 'component-missing-states'
+        ? { ...f, aiNote: 'foco: Mismo fondo que Normal con un anillo de 2 px en #043565 por fuera.\ndeshabilitado: Fondo #F2F4F7, texto #6B6B6B y opacidad 0,6; sin sombra.' }
+        : f,
+  ),
+  ...[
+    ['ai-spelling', 'medium', 'Ortografía: «Contraseña inválda» → «Contraseña inválida»', 'Falta una «i» en «inválida».', 'Mensaje de error'],
+    ['ai-tone', 'low', 'Trato: «Ingresa tu nombre completo» → «Ingrese su nombre completo»', 'El archivo usa «usted».', 'Etiqueta de nombre'],
+    ['ai-case', 'low', 'Mayúsculas: «CANCELAR» → «Cancelar»', 'Los demás botones usan mayúscula inicial.', 'Cancelar'],
+  ].map(([ruleId, severity, message, detail, nodeName], i) => ({
+    id: `${ruleId}:ai${i}`, ruleId, category: 'texts', severity, nodeId: `ai${i}`, nodeName, nodeType: 'TEXT', message, detail, status: 'fail',
+  }) as Finding),
+];
+
 export const aiSummary =
   'El archivo tiene una base de color sólida, pero 12 textos no cumplen el contraste mínimo y 34 capas conservan nombres por defecto. Empiece por los hallazgos críticos de accesibilidad; el resto se puede corregir en lote.';
+
+export const aiEstimate = (over: Partial<import('../../src/shared/messages').AiEstimate> = {}): import('../../src/shared/messages').AiEstimate => ({
+  layers: 340, texts: 1180, sets: 12, calls: 38, inputTokens: 91_000, outputTokens: 31_000, costUsd: 0.05, budgetUsd: 0.25, overBudget: false, model: 'claude-haiku-5-5', ...over,
+});
 
 export const reviewPayload = (findings: Finding[], over: Partial<ReviewPayload> = {}) => payload(findings, over);
 

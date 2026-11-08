@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import { buildResult } from '../engine/run';
 import { RULE_IDS } from '../shared/constants';
-import type { ErrorKind, FixKindGroup, InitPayload, LastSummary, Phase, ReviewPayload, Scope, ToPlugin, ToUi } from '../shared/messages';
+import type { AiEstimate as Estimate, ErrorKind, FixKindGroup, InitPayload, LastSummary, Phase, ReviewPayload, Scope, ToPlugin, ToUi } from '../shared/messages';
 import type { Finding, Settings as SettingsT } from '../shared/types';
 import { ResizeHandle, Toast } from './components';
-import { About, ErrorScreen, Export, Home, Results, Reviewing, Settings, Welcome, type BatchState, type ErrorAction, type KeyCheckState } from './screens';
+import { About, AiEstimate, ErrorScreen, Export, Home, Results, Reviewing, Settings, Welcome, type BatchState, type ErrorAction, type KeyCheckState } from './screens';
 import { t } from './i18n/es';
 
 export interface Bridge {
@@ -17,6 +17,7 @@ type Route =
   | { name: 'welcome' }
   | { name: 'home' }
   | { name: 'reviewing' }
+  | { name: 'ai-estimate' }
   | { name: 'results' }
   | { name: 'error'; kind: ErrorKind; detail?: string }
   | { name: 'settings' }
@@ -49,6 +50,7 @@ export function App({ bridge }: { bridge: Bridge }) {
   const [keyCheck, setKeyCheck] = useState<KeyCheckState>({ status: 'idle' });
   const [progress, setProgress] = useState<{ phase: Phase; done: number; total: number }>({ phase: 'reading', done: 0, total: 0 });
   const [cancelling, setCancelling] = useState(false);
+  const [estimate, setEstimate] = useState<Estimate | null>(null);
   const [review, setReview] = useState<ReviewPayload | null>(null);
   const [last, setLast] = useState<LastSummary | null>(null);
   const [batch, setBatch] = useState<BatchState | null>(null);
@@ -79,6 +81,10 @@ export function App({ bridge }: { bridge: Bridge }) {
           break;
         case 'progress':
           setProgress({ phase: m.phase, done: m.done, total: m.total });
+          break;
+        case 'ai-estimate':
+          setEstimate(m.estimate);
+          setStack((s) => [...s.filter((r) => r.name !== 'reviewing'), { name: 'ai-estimate' }]);
           break;
         case 'result':
           setReview(m.payload);
@@ -124,12 +130,12 @@ export function App({ bridge }: { bridge: Bridge }) {
   }, [bridge, reset]);
 
   const startReview = useCallback(
-    (s: Scope) => {
+    (s: Scope, noAi = false) => {
       setScope(s);
       setProgress({ phase: 'reading', done: 0, total: 0 });
       setCancelling(false);
-      setStack((st) => [...st.filter((r) => r.name !== 'error' && r.name !== 'reviewing'), { name: 'reviewing' }]);
-      bridge.send({ type: 'review', scope: s });
+      setStack((st) => [...st.filter((r) => r.name !== 'error' && r.name !== 'reviewing' && r.name !== 'ai-estimate'), { name: 'reviewing' }]);
+      bridge.send({ type: 'review', scope: s, ...(noAi ? { noAi: true } : {}) });
     },
     [bridge],
   );
@@ -154,14 +160,10 @@ export function App({ bridge }: { bridge: Bridge }) {
       if (a === 'page') return startReview('page');
       if (a === 'settings') return push({ name: 'settings' });
       if (a === 'home') return reset({ name: 'home' });
-      if (settings) {
-        const s = { ...settings, aiEnabled: false };
-        changeSettings(s);
-        bridge.send({ type: 'save-settings', settings: s });
-      }
-      startReview(scope);
+      // «Revisar sin IA»: solo esta vez; el ajuste no se toca.
+      startReview(scope, true);
     },
-    [bridge, changeSettings, push, reset, scope, settings, startReview],
+    [push, reset, scope, startReview],
   );
 
   const aiState: 'on' | 'off' | 'no-key' = useMemo(() => (!settings?.aiEnabled ? 'off' : hasKey ? 'on' : 'no-key'), [settings, hasKey]);
@@ -220,6 +222,23 @@ export function App({ bridge }: { bridge: Bridge }) {
           }}
         />
       );
+      break;
+    case 'ai-estimate':
+      screen = estimate ? (
+        <AiEstimate
+          estimate={estimate}
+          onRun={() => {
+            setProgress({ phase: 'ai', done: 0, total: 0 });
+            setStack((s) => [...s.filter((r) => r.name !== 'ai-estimate'), { name: 'reviewing' }]);
+            bridge.send({ type: 'ai-decision', run: true });
+          }}
+          onSkip={() => {
+            setProgress({ phase: 'checking', done: 0, total: 0 });
+            setStack((s) => [...s.filter((r) => r.name !== 'ai-estimate'), { name: 'reviewing' }]);
+            bridge.send({ type: 'ai-decision', run: false });
+          }}
+        />
+      ) : null;
       break;
     case 'results':
       screen = review ? (

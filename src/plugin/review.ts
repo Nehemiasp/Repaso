@@ -1,15 +1,20 @@
 // Orquesta una revisión: lee → motor → resultado. No contiene reglas.
 import { buildResult, orderedNodes, runRulesAsync } from '../engine';
+import { AiCache, AiError, createClient, estimateAi, needsConfirmation, runAiPass, type FetchLike } from '../ai';
 import { MAX_NODES } from '../shared/constants';
-import type { ErrorKind, LastSummary, ReviewPayload, Scope, ToUi } from '../shared/messages';
-import type { Scene, Settings, StyleCatalog } from '../shared/types';
+import type { AiEstimate, ErrorKind, LastSummary, ReviewPayload, Scope, ToUi } from '../shared/messages';
+import type { Finding, Scene, Settings, StyleCatalog } from '../shared/types';
 import { readCatalog } from '../read/catalog';
 import { readScope, TooLargeError } from '../read/traverse';
-import { getIgnored, setLast } from './storage';
+import { getAiCache, getIgnored, loadKey, setAiCache, setLast } from './storage';
 
 export interface ReviewDeps {
   post: (m: ToUi) => void;
   settings: Settings;
+  /** Solo esta revisión: sin IA. */
+  noAi?: boolean;
+  /** Pide confirmación a la persona cuando la IA sale cara o la revisión es grande. */
+  confirmAi: (estimate: AiEstimate) => Promise<boolean>;
 }
 
 export interface ReviewOutcome {
@@ -17,6 +22,7 @@ export interface ReviewOutcome {
   payload: ReviewPayload | null;
   scene?: Scene;
   catalog?: StyleCatalog;
+  aiNames?: Record<string, string>;
 }
 
 const fail = (post: (m: ToUi) => void, kind: ErrorKind, detail?: string, count?: number): ReviewOutcome => {
@@ -58,10 +64,71 @@ export async function runReview(scope: Scope, deps: ReviewDeps, signal: { cancel
     }
 
     const ignoredIds = getIgnored();
-    const meta = { scope, nodeCount: result.nodeCount, durationMs: Date.now() - started, at: Date.now() };
-    const payload: ReviewPayload = { findings: result.findings, ignoredIds, meta };
+    const ignored = new Set(ignoredIds);
+    let findings: Finding[] = result.findings;
+    let aiNames: Record<string, string> = {};
+    let aiSummary: string | undefined;
+    let aiNotice: string | undefined;
 
-    const shown = buildResult(result.findings, result.nodeCount, new Set(ignoredIds));
+    if (settings.aiEnabled && !deps.noAi) {
+      const key = await loadKey();
+      if (!key) {
+        aiNotice = 'La IA está activada pero no hay una clave guardada, así que se revisó sin IA. Péguela en Ajustes.';
+      } else {
+        const cache = AiCache.parse(getAiCache());
+        const estimate = estimateAi(scene, result.findings, ignored, settings, cache);
+        const go = needsConfirmation(estimate) ? (post({ type: 'ai-estimate', estimate }), await deps.confirmAi(estimate)) : true;
+        if (signal.cancelled) {
+          post({ type: 'cancelled' });
+          return { payload: null };
+        }
+        if (go) {
+          try {
+            const ai = await runAiPass({
+              scene,
+              findings: result.findings,
+              ignored,
+              settings,
+              client: createClient({ apiKey: key, model: settings.model, fetchFn: fetch as unknown as FetchLike }),
+              cache,
+              signal,
+              onProgress: (done, total) => post({ type: 'progress', phase: 'ai', done, total }),
+            });
+            setAiCache(cache.serialize());
+            if (signal.cancelled) {
+              post({ type: 'cancelled' });
+              return { payload: null };
+            }
+            aiNames = ai.aiNames;
+            aiSummary = ai.summary;
+            aiNotice = ai.notice;
+            findings = [
+              ...result.findings.map((f) => {
+                const note = ai.notes[f.id] ?? (ai.aiNames[f.id] ? `Nombre sugerido por la IA: «${ai.aiNames[f.id]}»` : undefined);
+                return note ? { ...f, aiNote: note } : f;
+              }),
+              ...ai.extra,
+            ];
+          } catch (e) {
+            // La clave, el saldo o la conexión fallaron: se explica con claridad y se ofrece revisar sin IA.
+            if (e instanceof AiError) return fail(post, e.kind, e.detail);
+            throw e;
+          }
+        }
+      }
+    }
+
+    const meta = { scope, nodeCount: result.nodeCount, durationMs: Date.now() - started, at: Date.now() };
+    const payload: ReviewPayload = {
+      findings,
+      ignoredIds,
+      meta,
+      ...(aiSummary ? { aiSummary } : {}),
+      ...(Object.keys(aiNames).length ? { aiNames } : {}),
+      ...(aiNotice ? { aiNotice } : {}),
+    };
+
+    const shown = buildResult(findings, result.nodeCount, ignored);
     const last: LastSummary = {
       score: shown.score.score,
       total: shown.findings.length,
@@ -75,7 +142,7 @@ export async function runReview(scope: Scope, deps: ReviewDeps, signal: { cancel
     };
     setLast(last);
     post({ type: 'result', payload });
-    return { payload, scene, catalog };
+    return { payload, scene, catalog, aiNames };
   } catch (e) {
     if (e instanceof TooLargeError) return fail(post, 'too-large', e.message, e.count);
     return fail(post, 'unknown', e instanceof Error ? e.message : String(e));

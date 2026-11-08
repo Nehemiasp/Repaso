@@ -4,7 +4,7 @@ import type { LastSummary } from '../shared/messages';
 import type { Settings } from '../shared/types';
 
 const K = { settings: 'settings', apiKey: 'anthropicKey', size: 'size', welcomeSeen: 'welcomeSeen' } as const;
-const D = { ignored: 'ignored', last: 'last' } as const;
+const D = { ignored: 'ignored', last: 'last', aiCache: 'aiCache' } as const;
 
 export const DEFAULT_SIZE = { width: 360, height: 560 };
 
@@ -49,5 +49,8 @@ const parse = <T,>(raw: string, fallback: T): T => {
 
 export const getIgnored = (): string[] => parse<string[]>(figma.root.getPluginData(D.ignored), []);
 export const setIgnored = (ids: string[]) => figma.root.setPluginData(D.ignored, JSON.stringify([...new Set(ids)]));
+/** Caché de la IA: viaja con el archivo (nombres y textos ya revisados), nunca la clave. */
+export const getAiCache = (): string => figma.root.getPluginData(D.aiCache);
+export const setAiCache = (raw: string) => figma.root.setPluginData(D.aiCache, raw);
 export const getLast = (): LastSummary | null => parse<LastSummary | null>(figma.root.getPluginData(D.last), null);
 export const setLast = (l: LastSummary) => figma.root.setPluginData(D.last, JSON.stringify(l));

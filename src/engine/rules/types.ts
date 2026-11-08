@@ -17,7 +17,7 @@ export interface Rule {
 export function makeFinding(
   rule: Pick<Rule, 'id' | 'category' | 'severity'>,
   node: DocNode,
-  extra: Pick<Finding, 'message'> & Partial<Pick<Finding, 'detail' | 'status' | 'fix' | 'severity'>>,
+  extra: Pick<Finding, 'message'> & Partial<Pick<Finding, 'detail' | 'status' | 'fix' | 'severity' | 'missing'>>,
 ): Finding {
   return {
     id: `${rule.id}:${node.id}`,
@@ -31,5 +31,6 @@ export function makeFinding(
     status: extra.status ?? 'fail',
     ...(extra.detail !== undefined ? { detail: extra.detail } : {}),
     ...(extra.fix !== undefined ? { fix: extra.fix } : {}),
+    ...(extra.missing !== undefined ? { missing: extra.missing } : {}),
   };
 }

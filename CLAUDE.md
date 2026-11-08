@@ -51,3 +51,11 @@ Proyecto personal de Nehemias Pérez (Diseñador UI/UX) para su sección «Labor
 - **Claude por `fetch` desde el hilo principal** con `tool_use` + `input_schema` para JSON estructurado, validado a mano (sin Zod por tamaño), un reintento y descarte silencioso.
 - **Modelo económico por defecto (`claude-haiku-5-5`)**, lotes de ~40 capas, caché por hash y tope de costo por revisión.
 - **Tokens CSS únicos** (`tokens.css`) sobre las variables `--figma-color-*` con `themeColors: true`, para que siga el tema claro/oscuro de Figma.
+- **`fetch` directo a `/v1/messages` en vez del SDK de Anthropic**: corre en el hilo principal de Figma (JS restringido, no verificable desde aquí), el manifiesto solo permite un dominio y es una sola llamada; así el bundle sigue chico. Envía `anthropic-dangerous-direct-browser-access: true` por CORS.
+- **Salida estructurada con `output_config.format` (JSON Schema)** en vez de `tool_choice` forzado: los modelos del menú rechazan el forzado; el esquema no admite `maxLength`, así que el largo se valida en `src/ai/validate.ts`.
+- **Sin `temperature` ni `thinking`, con `effort: "low"`**: los modelos 5.x rechazan muestreo; el razonamiento adaptativo a esfuerzo bajo basta para nombrar y corregir textos y cuesta poco.
+- **«Probar clave» usa `GET /v1/models`**: valida la clave y CORS sin gastar un solo token.
+- **Una respuesta inválida se reintenta una vez y luego se descarta ese lote**; clave, saldo, límite y conexión sí se muestran como error con salida («Revisar sin IA», solo esa vez).
+- **La IA nunca toca las reglas**: solo agrega nombres, notas de estados, hallazgos de texto (`ai-*`) y el resumen. Un test comprueba que la lista de reglas queda intacta.
+- **Control de costo**: lotes (40 nombres / 8 sets / 60 textos), textos repetidos se envían una vez, caché por archivo en `setPluginData('aiCache')` (clave = hash de la estructura; la de botones incluye todas las etiquetas porque las mayúsculas dependen del conjunto), estimado y confirmación en archivos grandes (>120 elementos o >0,02 USD) y tope por revisión que corta y avisa.
+- **Lo que se envía**: nombre, tipo, tamaño, layout, posición relativa y textos de hijos; colores solo de variantes de componente. Un test verifica que no salgan colores ni imágenes en nombres y textos.

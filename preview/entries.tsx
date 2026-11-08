@@ -7,7 +7,7 @@ import {
   Button, Checkbox, Cuadros, Disclosure, EmptyState, Field, FindingRow, Header, ICON_NAMES, Icon, IconButton, Notice, NumberField,
   ProgressBar, ScoreRing, Segmented, Select, SeverityBadge, Switch, Tabs, Toast,
 } from '../src/ui/components';
-import { About, ErrorScreen, Export, Home, Results, Reviewing, Settings, Welcome, type BatchState, type KeyCheckState } from '../src/ui/screens';
+import { About, AiEstimate, ErrorScreen, Export, Home, Results, Reviewing, Settings, Welcome, type BatchState, type KeyCheckState } from '../src/ui/screens';
 import { MODELS } from '../src/ui/screens/Settings';
 import * as D from './fixtures/data';
 
@@ -190,7 +190,7 @@ export const entries: Entry[] = [
   { id: 'results-long', group: 'results', title: 'Nombres de capa muy largos', render: () => <ResultsDemo findings={D.longNameFindings} /> },
   { id: 'results-single', group: 'results', title: 'Una sola categoría con problemas', render: () => <ResultsDemo findings={D.singleCategoryFindings} /> },
   { id: 'results-unverified', group: 'results', title: 'Solo «no verificado» (sobre foto)', render: () => <ResultsDemo findings={D.unverifiedFindings} /> },
-  { id: 'results-ai', group: 'results', title: 'Con resumen de IA y aviso de tope', render: () => <ResultsDemo findings={D.testFileFindings} aiSummary={D.aiSummary} aiNotice="La IA revisó 120 de 340 capas porque se alcanzó el tope de 0,25 USD. Suba el tope en Ajustes o revise por partes." /> },
+  { id: 'results-ai', group: 'results', title: 'Con IA: notas, textos, resumen y aviso de tope', render: () => <ResultsDemo findings={D.aiFindings} aiSummary={D.aiSummary} aiNotice="La IA revisó 120 de 340 capas porque se alcanzó el tope de 0,25 USD. Suba el tope en Ajustes o revise por partes." /> },
   { id: 'results-ignored', group: 'results', title: 'Con hallazgos ignorados', render: () => <ResultsDemo findings={D.testFileFindings} ignored={D.testFileFindings.slice(0, 3).map((f) => f.id)} /> },
   { id: 'batch-rename', group: 'results', title: 'Lote: renombrar 34 capas', note: 'Antes → después, con casillas.', render: () => <ResultsDemo findings={D.findings200} initialBatch={{ kind: 'rename', preview: D.renamePreview34, applying: false }} /> },
   { id: 'batch-color', group: 'results', title: 'Lote: estilo de color', render: () => <ResultsDemo findings={D.testFileFindings} initialBatch={{ kind: 'apply-color', preview: D.colorPreview, applying: false }} /> },
@@ -198,6 +198,9 @@ export const entries: Entry[] = [
   { id: 'batch-loading', group: 'results', title: 'Lote: preparando vista previa', render: () => <ResultsDemo findings={D.testFileFindings} initialBatch={{ kind: 'rename', preview: null, applying: false }} /> },
   { id: 'batch-applying', group: 'results', title: 'Lote: aplicando', render: () => <ResultsDemo findings={D.testFileFindings} initialBatch={{ kind: 'apply-text-style', preview: D.textPreview, applying: true }} /> },
   { id: 'batch-applied', group: 'results', title: 'Después de aplicar', render: () => <ResultsDemo findings={D.testFileFindings.slice(4)} applied="Se aplicaron 34 cambios. Ctrl+Z los deshace." /> },
+
+  { id: 'ai-estimate', group: 'reviewing', title: 'Estimado antes de usar la IA', note: 'Aparece en archivos grandes o si el costo pasa de ~0,02 USD.', render: () => <AiEstimate estimate={D.aiEstimate()} onRun={noop} onSkip={noop} /> },
+  { id: 'ai-estimate-over', group: 'reviewing', title: 'Estimado que supera el tope', render: () => <AiEstimate estimate={D.aiEstimate({ costUsd: 0.62, overBudget: true, model: 'claude-sonnet-5-5', calls: 96 })} onRun={noop} onSkip={noop} /> },
 
   { id: 'clean', group: 'clean', title: 'Sin problemas', render: () => <ResultsDemo findings={[]} /> },
   { id: 'clean-ignored', group: 'clean', title: 'Sin problemas (con ignorados)', render: () => <ResultsDemo findings={D.testFileFindings} ignored={D.testFileFindings.map((f) => f.id)} /> },

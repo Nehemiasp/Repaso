@@ -22,6 +22,7 @@ export const componentStatesRule: Rule = {
     const options = node.component.variantOptions;
     const entry = Object.entries(options).find(([k]) => STATE_PROP.test(k));
     const interactive = isInteractiveName(node.name);
+    const required = isFieldName(node.name) ? [HOVER, FOCUS, DISABLED, ERROR] : [HOVER, FOCUS, DISABLED];
 
     if (!entry) {
       if (!interactive) return [];
@@ -29,12 +30,12 @@ export const componentStatesRule: Rule = {
         makeFinding(meta, node, {
           message: 'Componente interactivo sin propiedad de estado',
           detail: 'Agregue una propiedad «Estado» con hover, foco y deshabilitado.',
+          missing: required.map((s) => s.label),
         }),
       ];
     }
 
     const present = entry[1];
-    const required = isFieldName(node.name) ? [HOVER, FOCUS, DISABLED, ERROR] : [HOVER, FOCUS, DISABLED];
     const missing = required.filter((s) => !present.some((p) => s.match.test(p))).map((s) => s.label);
     if (missing.length === 0) return [];
     return [
@@ -42,6 +43,7 @@ export const componentStatesRule: Rule = {
         severity: missing.length >= 2 ? 'high' : 'medium',
         message: `Faltan estados: ${missing.join(', ')}`,
         detail: `Tiene: ${present.join(', ') || 'ninguno'}.`,
+        missing,
       }),
     ];
   },

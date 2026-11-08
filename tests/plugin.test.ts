@@ -227,6 +227,174 @@ describe('plugin (API de Figma simulada)', () => {
   });
 });
 
+describe('plugin con IA (fetch simulado)', () => {
+  const calls: { url: string; headers: Record<string, string>; body?: string }[] = [];
+  const respond = (handler: (user: any) => unknown, status = 200) =>
+    vi.stubGlobal('fetch', async (url: string, init: { headers: Record<string, string>; body?: string }) => {
+      calls.push({ url, headers: init.headers, body: init.body });
+      if (status !== 200) return { ok: false, status, text: async () => JSON.stringify({ error: { type: status === 401 ? 'authentication_error' : 'billing_error', message: 'x' } }) };
+      const user = init.body ? JSON.parse(JSON.parse(init.body).messages[0].content) : {};
+      return { ok: true, status: 200, text: async () => JSON.stringify({ content: [{ type: 'text', text: JSON.stringify(handler(user)) }], usage: { input_tokens: 300, output_tokens: 50 }, stop_reason: 'end_turn' }) };
+    });
+  const smart = (user: any) =>
+    user.layers ? { names: user.layers.map((l: any) => ({ id: l.id, name: 'Tarjeta / Producto' })) }
+    : user.textos ? { issues: [] }
+    : { summary: 'Revisión sin sobresaltos: solo falta ordenar nombres y espaciado.' };
+
+  const enableAi = async (over: Record<string, unknown> = {}) => {
+    await send({ type: 'save-settings', settings: { ...(await initSettings()), aiEnabled: true, ...over } as never });
+    await send({ type: 'save-key', key: 'sk-ant-api03-TESTKEY9999' });
+  };
+  beforeEach(() => {
+    calls.length = 0;
+  });
+
+  it('con IA activada: nombres, resumen y caché por archivo; la clave solo va en el encabezado', async () => {
+    await enableAi();
+    respond(smart);
+    await send({ type: 'review', scope: 'selection' });
+    const res = last('result')!.payload;
+    expect(res.aiSummary).toContain('Revisión sin sobresaltos');
+    expect(res.aiNames).toEqual({ 'layer-default-name:1:1': 'Tarjeta / Producto' });
+    expect(res.findings.find((f) => f.id === 'layer-default-name:1:1')!.aiNote).toBe('Nombre sugerido por la IA: «Tarjeta / Producto»');
+    expect(calls.every((c) => c.url === 'https://api.anthropic.com/v1/messages')).toBe(true);
+    expect(calls.every((c) => c.headers['x-api-key'] === 'sk-ant-api03-TESTKEY9999' && c.headers['anthropic-dangerous-direct-browser-access'] === 'true')).toBe(true);
+    expect(calls.map((c) => c.body).join('')).not.toContain('TESTKEY');
+    expect(pluginData.get('aiCache')).toBeTruthy();
+    expect(pluginData.get('aiCache')).not.toContain('TESTKEY');
+
+    // La vista previa de «renombrar» usa el nombre de la IA.
+    await send({ type: 'request-fix-preview', kind: 'rename', findingIds: ['layer-default-name:1:1'] });
+    expect(last('fix-preview')!.preview.items[0]).toMatchObject({ after: 'Tarjeta / Producto', source: 'ai' });
+
+    // Segunda revisión: lo que no cambió sale de la caché (solo se vuelve a pedir el resumen).
+    calls.length = 0;
+    await send({ type: 'review', scope: 'selection' });
+    expect(calls).toHaveLength(1);
+    expect(JSON.parse(calls[0]!.body!).messages[0].content).toContain('puntaje');
+  });
+
+  it('«Revisar sin IA» no hace ninguna petición de red', async () => {
+    await enableAi();
+    respond(smart);
+    await send({ type: 'review', scope: 'selection', noAi: true });
+    expect(calls).toHaveLength(0);
+    expect(last('result')!.payload.aiSummary).toBeUndefined();
+  });
+
+  it('IA apagada: cero peticiones de red (las reglas funcionan sin internet)', async () => {
+    await send({ type: 'save-settings', settings: { ...(await initSettings()), aiEnabled: false } as never });
+    respond(smart);
+    await send({ type: 'review', scope: 'selection' });
+    expect(calls).toHaveLength(0);
+    expect(last('result')!.payload.findings.length).toBeGreaterThan(0);
+  });
+
+  it('IA activada sin clave: se revisa sin IA y se avisa', async () => {
+    await send({ type: 'clear-key' });
+    await send({ type: 'save-settings', settings: { ...(await initSettings()), aiEnabled: true } as never });
+    respond(smart);
+    await send({ type: 'review', scope: 'selection' });
+    expect(calls).toHaveLength(0);
+    expect(last('result')!.payload.aiNotice).toContain('no hay una clave');
+  });
+
+  it.each([
+    [401, 'ai-key-invalid'],
+    [402, 'ai-no-credit'],
+  ])('HTTP %i → error visible «%s» (sin perder la posibilidad de revisar sin IA)', async (status, kind) => {
+    await enableAi();
+    respond(smart, status);
+    await send({ type: 'review', scope: 'selection' });
+    expect(last('error')).toMatchObject({ kind });
+    expect(posted.some((m) => m.type === 'result')).toBe(false);
+  });
+
+  it('sin conexión → ai-offline', async () => {
+    await enableAi();
+    vi.stubGlobal('fetch', async () => {
+      throw new TypeError('Failed to fetch');
+    });
+    await send({ type: 'review', scope: 'selection' });
+    expect(last('error')).toMatchObject({ kind: 'ai-offline' });
+  });
+
+  it('archivo grande: muestra el estimado y espera la decisión', async () => {
+    await enableAi();
+    respond(smart);
+    const kids = Array.from({ length: 150 }, (_, i) => ({ id: `x${i}`, type: 'TEXT', name: `t${i}`, characters: `Texto número ${i} de la lista`, width: 50, height: 20, x: 0, y: 0, fills: [solid('#111111')], fontSize: 16, fontName: { family: 'Inter', style: 'Regular' }, fontWeight: 400, textStyleId: 'S:1', visible: true, opacity: 1 }));
+    page.children = [link({ id: 'big', type: 'FRAME', name: 'Lista', width: 300, height: 3000, x: 0, y: 0, fills: [solid('#FFFFFF')], visible: true, opacity: 1, children: kids as N[] })];
+    const run = send({ type: 'review', scope: 'page' });
+    await vi.waitFor(() => expect(last('ai-estimate')).toBeTruthy());
+    expect(last('ai-estimate')!.estimate).toMatchObject({ texts: 150, overBudget: false });
+    expect(calls).toHaveLength(0);
+    await send({ type: 'ai-decision', run: false });
+    await run;
+    expect(calls).toHaveLength(0);
+    expect(last('result')).toBeTruthy();
+  });
+
+  it('archivo grande: si la persona continúa, la IA corre por lotes', async () => {
+    await enableAi();
+    respond(smart);
+    const kids = Array.from({ length: 150 }, (_, i) => ({ id: `y${i}`, type: 'TEXT', name: `t${i}`, characters: `Texto número ${i} de la lista`, width: 50, height: 20, x: 0, y: 0, fills: [solid('#111111')], fontSize: 16, fontName: { family: 'Inter', style: 'Regular' }, fontWeight: 400, textStyleId: 'S:1', visible: true, opacity: 1 }));
+    page.children = [link({ id: 'big2', type: 'FRAME', name: 'Lista', width: 300, height: 3000, x: 0, y: 0, fills: [solid('#FFFFFF')], visible: true, opacity: 1, children: kids as N[] })];
+    const run = send({ type: 'review', scope: 'page' });
+    await vi.waitFor(() => expect(last('ai-estimate')).toBeTruthy());
+    await send({ type: 'ai-decision', run: true });
+    await run;
+    expect(calls.length).toBe(4); // 3 lotes de textos + resumen
+    expect(posted.some((m) => m.type === 'progress' && m.phase === 'ai')).toBe(true);
+  });
+
+  it('cancelar durante la confirmación termina sin gastar', async () => {
+    await enableAi();
+    respond(smart);
+    const kids = Array.from({ length: 150 }, (_, i) => ({ id: `z${i}`, type: 'TEXT', name: `t${i}`, characters: `Texto número ${i} de la lista`, width: 50, height: 20, x: 0, y: 0, fills: [solid('#111111')], fontSize: 16, fontName: { family: 'Inter', style: 'Regular' }, fontWeight: 400, textStyleId: 'S:1', visible: true, opacity: 1 }));
+    page.children = [link({ id: 'big3', type: 'FRAME', name: 'Lista', width: 300, height: 3000, x: 0, y: 0, fills: [solid('#FFFFFF')], visible: true, opacity: 1, children: kids as N[] })];
+    const run = send({ type: 'review', scope: 'page' });
+    await vi.waitFor(() => expect(last('ai-estimate')).toBeTruthy());
+    await send({ type: 'cancel' });
+    await run;
+    expect(last('cancelled')).toBeTruthy();
+    expect(calls).toHaveLength(0);
+  });
+
+  it('Probar clave: usa GET /v1/models (sin gastar tokens) y explica cada fallo', async () => {
+    const seen: string[] = [];
+    vi.stubGlobal('fetch', async (url: string, init: { method: string }) => {
+      seen.push(`${init.method} ${url}`);
+      return { ok: true, status: 200, text: async () => '{"data":[]}' };
+    });
+    await send({ type: 'check-key', key: 'sk-ant-api03-NUEVA0000' });
+    expect(last('key-check')).toEqual({ type: 'key-check', ok: true });
+    expect(seen).toEqual(['GET https://api.anthropic.com/v1/models?limit=1']);
+
+    respond(smart, 401);
+    await send({ type: 'check-key', key: 'sk-ant-mala' });
+    expect(last('key-check')).toMatchObject({ ok: false, kind: 'ai-key-invalid', detail: expect.stringContaining('rechazó la clave') });
+
+    vi.stubGlobal('fetch', async () => {
+      throw new Error('net');
+    });
+    await send({ type: 'check-key', key: 'sk-ant-x' });
+    expect(last('key-check')).toMatchObject({ ok: false, kind: 'ai-offline' });
+
+    // Sin clave en ningún lado.
+    await send({ type: 'clear-key' });
+    await send({ type: 'check-key' });
+    expect(last('key-check')).toMatchObject({ ok: false, detail: 'Primero pegue una clave.' });
+  });
+
+  it('Probar clave con la clave guardada', async () => {
+    await send({ type: 'save-key', key: 'sk-ant-api03-GUARDADA11' });
+    respond(smart);
+    vi.stubGlobal('fetch', async (_u: string, init: { headers: Record<string, string> }) => ({ ok: init.headers['x-api-key'] === 'sk-ant-api03-GUARDADA11', status: 200, text: async () => '{}' }));
+    await send({ type: 'check-key' });
+    expect(last('key-check')).toMatchObject({ ok: true });
+  });
+});
+
 async function initSettings() {
   await send({ type: 'ready' });
   return last('init')!.payload.settings;

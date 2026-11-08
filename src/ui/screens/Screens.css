@@ -98,3 +98,14 @@
 
 /* Las columnas de las rejillas no se estiran por su contenido: así nada desborda a los lados. */
 .rp-settings, .rp-section, .rp-section__body, .rp-home, .rp-card, .rp-export, .rp-key, .rp-privacy, .rp-summary, .rp-rules { grid-template-columns: minmax(0, 1fr); }
+
+/* ── Confirmación de IA ──────────────────────────────────── */
+.rp-estimate { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--rp-space-4); padding: var(--rp-gutter); animation: rp-fade-in var(--rp-duration) var(--rp-ease); }
+.rp-estimate__cost { display: grid; gap: var(--rp-space-1); padding: var(--rp-space-4); border-radius: var(--rp-radius-lg); background: var(--rp-accent-subtle); color: var(--rp-accent-subtle-text); }
+.rp-estimate__label { font-size: var(--rp-text-xs); font-weight: var(--rp-weight-semibold); }
+.rp-estimate__value { font-size: var(--rp-text-2xl); font-weight: var(--rp-weight-bold); line-height: var(--rp-leading-tight); font-variant-numeric: tabular-nums; }
+.rp-estimate__rows { display: grid; margin: 0; font-size: var(--rp-text-sm); }
+.rp-estimate__rows div { display: flex; justify-content: space-between; gap: var(--rp-space-3); padding: var(--rp-space-2) 0; border-bottom: 1px solid var(--rp-border); }
+.rp-estimate__rows dt { color: var(--rp-text-secondary); }
+.rp-estimate__rows dd { margin: 0; font-variant-numeric: tabular-nums; text-align: right; }
+.rp-estimate__sends { display: flex; align-items: flex-start; gap: var(--rp-space-2); }

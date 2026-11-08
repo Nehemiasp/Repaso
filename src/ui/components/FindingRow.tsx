@@ -40,6 +40,12 @@ export function FindingRow({ finding, onSelect, onFix, onIgnore, showCategory }:
           <span class="rp-row__layername" title={finding.nodeName}>{finding.nodeName || NODE_TYPE_LABEL[finding.nodeType]}</span>
         </span>
         {finding.detail && <span class="rp-row__detail">{finding.detail}</span>}
+        {finding.aiNote && (
+          <span class="rp-row__ai">
+            <span class="rp-row__ailabel"><Icon name="sparkle" size={12} /> {t.results.aiLabel}</span>
+            <span class="rp-row__ainote">{finding.aiNote}</span>
+          </span>
+        )}
       </button>
       <div class="rp-row__actions">
         {finding.fix && onFix && (

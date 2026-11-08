@@ -1,8 +1,8 @@
 import { RULE_PENALTY_CAP, SEVERITY_WEIGHT } from '../shared/constants';
-import { CATEGORIES, SEVERITIES, type Category, type Finding, type RuleId, type Severity } from '../shared/types';
+import { CATEGORIES, SEVERITIES, type AiRuleId, type Category, type Finding, type RuleId, type Severity } from '../shared/types';
 
 export interface ScoreBreakdownItem {
-  ruleId: RuleId;
+  ruleId: RuleId | AiRuleId;
   count: number;
   /** Puntos que resta esta regla (ya con tope). */
   penalty: number;
@@ -23,7 +23,7 @@ export interface ScoreResult {
  * un solo tipo de problema repetido no hunda todo el puntaje.
  */
 export function computeScore(findings: Finding[]): ScoreResult {
-  const raw = new Map<RuleId, { count: number; sum: number }>();
+  const raw = new Map<RuleId | AiRuleId, { count: number; sum: number }>();
   for (const f of findings) {
     const cur = raw.get(f.ruleId) ?? { count: 0, sum: 0 };
     cur.count += 1;
