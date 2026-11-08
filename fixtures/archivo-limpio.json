@@ -1,0 +1,312 @@
+{
+  "catalog": {
+    "colors": [
+      {
+        "id": "S:color0",
+        "name": "Marca/Azul",
+        "color": {
+          "r": 0.01568627450980392,
+          "g": 0.20784313725490197,
+          "b": 0.396078431372549
+        },
+        "source": "style"
+      },
+      {
+        "id": "S:color1",
+        "name": "Texto/Principal",
+        "color": {
+          "r": 0.06666666666666667,
+          "g": 0.06666666666666667,
+          "b": 0.06666666666666667
+        },
+        "source": "style"
+      },
+      {
+        "id": "S:color2",
+        "name": "Fondo/Blanco",
+        "color": {
+          "r": 1,
+          "g": 1,
+          "b": 1
+        },
+        "source": "style"
+      },
+      {
+        "id": "S:color3",
+        "name": "Fondo/Gris",
+        "color": {
+          "r": 0.9490196078431372,
+          "g": 0.9568627450980393,
+          "b": 0.9686274509803922
+        },
+        "source": "style"
+      }
+    ],
+    "texts": [
+      {
+        "id": "S:text0",
+        "name": "Cuerpo",
+        "fontFamily": "Inter",
+        "fontSize": 16,
+        "fontWeight": 400
+      },
+      {
+        "id": "S:text1",
+        "name": "Título",
+        "fontFamily": "Inter",
+        "fontSize": 24,
+        "fontWeight": 700
+      },
+      {
+        "id": "S:text2",
+        "name": "Etiqueta",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "fontWeight": 500
+      }
+    ]
+  },
+  "scene": {
+    "rootIds": [
+      "pantalla"
+    ],
+    "nodes": {
+      "pantalla": {
+        "name": "Pantalla / Inicio",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 844
+        },
+        "fills": [
+          {
+            "kind": "solid",
+            "color": {
+              "r": 1,
+              "g": 1,
+              "b": 1
+            },
+            "opacity": 1,
+            "visible": true,
+            "styleId": "S:color2"
+          }
+        ],
+        "layout": {
+          "mode": "VERTICAL",
+          "gap": 16,
+          "padL": 24,
+          "padR": 24,
+          "padT": 24,
+          "padB": 24
+        },
+        "id": "pantalla",
+        "type": "FRAME",
+        "parentId": null,
+        "children": [
+          "titulo",
+          "cuerpo",
+          "boton",
+          "boton-inst",
+          "boton-set"
+        ]
+      },
+      "titulo": {
+        "name": "Bienvenida",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 120,
+          "height": 24
+        },
+        "fills": [
+          {
+            "kind": "solid",
+            "color": {
+              "r": 0.06666666666666667,
+              "g": 0.06666666666666667,
+              "b": 0.06666666666666667
+            },
+            "opacity": 1,
+            "visible": true,
+            "styleId": "S:color1"
+          }
+        ],
+        "text": {
+          "characters": "Bienvenida",
+          "fontSize": 24,
+          "fontFamily": "Inter",
+          "fontWeight": 400,
+          "textStyleId": "S:text1"
+        },
+        "id": "titulo",
+        "type": "TEXT",
+        "parentId": "pantalla",
+        "children": []
+      },
+      "cuerpo": {
+        "name": "Revise su diseño antes de entregarlo a desarrollo.",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 120,
+          "height": 24
+        },
+        "fills": [
+          {
+            "kind": "solid",
+            "color": {
+              "r": 0.06666666666666667,
+              "g": 0.06666666666666667,
+              "b": 0.06666666666666667
+            },
+            "opacity": 1,
+            "visible": true,
+            "styleId": "S:color1"
+          }
+        ],
+        "text": {
+          "characters": "Revise su diseño antes de entregarlo a desarrollo.",
+          "fontSize": 16,
+          "fontFamily": "Inter",
+          "fontWeight": 400,
+          "textStyleId": "S:text0"
+        },
+        "id": "cuerpo",
+        "type": "TEXT",
+        "parentId": "pantalla",
+        "children": []
+      },
+      "boton": {
+        "name": "Botón / Relleno",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 342,
+          "height": 48
+        },
+        "fills": [
+          {
+            "kind": "solid",
+            "color": {
+              "r": 0.01568627450980392,
+              "g": 0.20784313725490197,
+              "b": 0.396078431372549
+            },
+            "opacity": 1,
+            "visible": true,
+            "styleId": "S:color0"
+          }
+        ],
+        "radius": 8,
+        "layout": {
+          "mode": "HORIZONTAL",
+          "gap": 8,
+          "padL": 16,
+          "padR": 16,
+          "padT": 12,
+          "padB": 12
+        },
+        "id": "boton",
+        "type": "FRAME",
+        "parentId": "pantalla",
+        "children": [
+          "boton-texto"
+        ]
+      },
+      "boton-texto": {
+        "name": "Revisar",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 120,
+          "height": 24
+        },
+        "fills": [
+          {
+            "kind": "solid",
+            "color": {
+              "r": 1,
+              "g": 1,
+              "b": 1
+            },
+            "opacity": 1,
+            "visible": true,
+            "styleId": "S:color2"
+          }
+        ],
+        "text": {
+          "characters": "Revisar",
+          "fontSize": 16,
+          "fontFamily": "Inter",
+          "fontWeight": 400,
+          "textStyleId": "S:text0"
+        },
+        "id": "boton-texto",
+        "type": "TEXT",
+        "parentId": "boton",
+        "children": []
+      },
+      "boton-inst": {
+        "name": "Botón / Secundario",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 342,
+          "height": 48
+        },
+        "fills": [],
+        "component": {
+          "kind": "instance",
+          "props": {
+            "Estado": "Normal"
+          },
+          "mainName": "Botón"
+        },
+        "id": "boton-inst",
+        "type": "INSTANCE",
+        "parentId": "pantalla",
+        "children": []
+      },
+      "boton-set": {
+        "name": "Botón",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 300,
+          "height": 120
+        },
+        "fills": [],
+        "component": {
+          "kind": "set",
+          "variantOptions": {
+            "Estado": [
+              "Normal",
+              "Hover",
+              "Foco",
+              "Deshabilitado"
+            ]
+          }
+        },
+        "id": "boton-set",
+        "type": "COMPONENT_SET",
+        "parentId": "pantalla",
+        "children": []
+      }
+    }
+  }
+}

@@ -17,5 +17,5 @@
     "isolatedModules": true,
     "types": ["@figma/plugin-typings", "node"]
   },
-  "include": ["src", "preview", "evals", "scripts", "vitest.config.ts"]
+  "include": ["src", "tests", "fixtures", "preview", "evals", "scripts", "vitest.config.ts"]
 }
