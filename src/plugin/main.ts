@@ -1,6 +1,9 @@
 // Hilo principal del plugin: único lugar con la API de Figma. La interfaz vive en otro iframe.
 import { APP_VERSION } from '../shared/constants';
+import { applyFixes, buildPreview } from '../fixes';
+import { figmaPort } from '../fixes/figmaPort';
 import type { ToPlugin, ToUi } from '../shared/messages';
+import type { Finding, Scene } from '../shared/types';
 import { runReview } from './review';
 import * as store from './storage';
 
@@ -13,6 +16,8 @@ async function main() {
   let signal = { cancelled: false };
   let running = false;
   let sizeTimer: ReturnType<typeof setTimeout> | undefined;
+  /** Lo último que se revisó, en memoria: las correcciones se calculan sobre esto. */
+  let session: { scene: Scene; findings: Finding[]; aiNames: Record<string, string> } | null = null;
 
   figma.on('selectionchange', () => post({ type: 'selection', count: figma.currentPage.selection.length }));
 
@@ -56,7 +61,8 @@ async function main() {
         running = true;
         signal = { cancelled: false };
         try {
-          await runReview(msg.scope, { post, settings }, signal);
+          const out = await runReview(msg.scope, { post, settings }, signal);
+          if (out.payload && out.scene) session = { scene: out.scene, findings: out.payload.findings, aiNames: {} };
         } finally {
           running = false;
         }
@@ -106,8 +112,26 @@ async function main() {
       case 'notify':
         figma.notify(msg.message);
         break;
+      case 'request-fix-preview': {
+        if (!session) return;
+        const ids = new Set(msg.findingIds);
+        const chosen = session.findings.filter((f) => ids.has(f.id));
+        post({ type: 'fix-preview', preview: buildPreview(msg.kind, chosen, session.scene, { aiNames: session.aiNames }) });
+        break;
+      }
+      case 'apply-fixes': {
+        if (!session) return;
+        const ids = new Set(msg.findingIds);
+        const chosen = session.findings.filter((f) => ids.has(f.id));
+        const res = await applyFixes(msg.kind, chosen, figmaPort, session.aiNames);
+        const fixed = new Set(res.applied);
+        session = { ...session, findings: session.findings.filter((f) => !fixed.has(f.id)) };
+        post({ type: 'fix-applied', kind: msg.kind, applied: res.applied.length, skipped: res.skipped.length, fixedIds: res.applied });
+        if (res.applied.length) figma.notify(`Repaso: ${res.applied.length} cambios aplicados. Ctrl+Z los deshace.`);
+        break;
+      }
       default:
-        // Mensajes de correcciones (fase 3) y de IA (fase 4) se conectan aquí.
+        // Mensajes de IA (fase 4) se conectan aquí.
         break;
     }
   };

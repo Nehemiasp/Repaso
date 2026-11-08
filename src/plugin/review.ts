@@ -2,7 +2,7 @@
 import { buildResult, orderedNodes, runRulesAsync } from '../engine';
 import { MAX_NODES } from '../shared/constants';
 import type { ErrorKind, LastSummary, ReviewPayload, Scope, ToUi } from '../shared/messages';
-import type { Settings, StyleCatalog } from '../shared/types';
+import type { Scene, Settings, StyleCatalog } from '../shared/types';
 import { readCatalog } from '../read/catalog';
 import { readScope, TooLargeError } from '../read/traverse';
 import { getIgnored, setLast } from './storage';
@@ -15,6 +15,7 @@ export interface ReviewDeps {
 export interface ReviewOutcome {
   /** null si se canceló o falló (ya se avisó a la interfaz). */
   payload: ReviewPayload | null;
+  scene?: Scene;
   catalog?: StyleCatalog;
 }
 
@@ -74,7 +75,7 @@ export async function runReview(scope: Scope, deps: ReviewDeps, signal: { cancel
     };
     setLast(last);
     post({ type: 'result', payload });
-    return { payload, catalog };
+    return { payload, scene, catalog };
   } catch (e) {
     if (e instanceof TooLargeError) return fail(post, 'too-large', e.message, e.count);
     return fail(post, 'unknown', e instanceof Error ? e.message : String(e));
