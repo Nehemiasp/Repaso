@@ -5,5 +5,4 @@ coverage
 *.log
 .DS_Store
 preview-dist
-docs/assets/video/*.webm
 dist-community

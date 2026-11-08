@@ -5,9 +5,10 @@ import { cp, mkdir } from 'node:fs/promises';
 const port = Number(process.env.PORT ?? 5173);
 await mkdir('preview-dist', { recursive: true });
 await cp('preview/index.html', 'preview-dist/index.html');
+await cp('preview/demo.html', 'preview-dist/demo.html');
 
 const ctx = await context({
-  entryPoints: { preview: 'preview/index.tsx' },
+  entryPoints: { preview: 'preview/index.tsx', demo: 'preview/demo.tsx' },
   outdir: 'preview-dist',
   bundle: true,
   format: 'iife',
@@ -20,4 +21,4 @@ const ctx = await context({
 });
 await ctx.watch();
 const { hosts, port: p } = await ctx.serve({ servedir: 'preview-dist', port });
-console.log(`Galería de estados en http://localhost:${p}  (${hosts.join(', ')})`);
+console.log(`Galería de estados en http://localhost:${p}  (${hosts.join(', ')})\nDemo interactiva en     http://localhost:${p}/demo.html  (?ai=1 con IA, ?theme=dark)`);
