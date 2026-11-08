@@ -1,0 +1,47 @@
+{
+  "fecha": "2026-11-08T01:24:15.534Z",
+  "node": "v22.23.4",
+  "presupuestoMs": 8,
+  "filas": [
+    {
+      "objetivo": 500,
+      "capas": 500,
+      "hallazgos": 978,
+      "lecturaMs": 2,
+      "reglasMs": 4,
+      "totalMs": 6,
+      "tramoMaxMs": 0,
+      "cesiones": 0
+    },
+    {
+      "objetivo": 2000,
+      "capas": 2000,
+      "hallazgos": 3913,
+      "lecturaMs": 7,
+      "reglasMs": 12,
+      "totalMs": 17,
+      "tramoMaxMs": 8,
+      "cesiones": 1
+    },
+    {
+      "objetivo": 5000,
+      "capas": 5000,
+      "hallazgos": 9786,
+      "lecturaMs": 18,
+      "reglasMs": 22,
+      "totalMs": 40,
+      "tramoMaxMs": 8.4,
+      "cesiones": 4
+    },
+    {
+      "objetivo": 20000,
+      "capas": 20000,
+      "hallazgos": 39142,
+      "lecturaMs": 48,
+      "reglasMs": 85,
+      "totalMs": 134,
+      "tramoMaxMs": 14.6,
+      "cesiones": 12
+    }
+  ]
+}

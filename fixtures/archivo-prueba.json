@@ -1,0 +1,847 @@
+{
+  "catalog": {
+    "colors": [
+      {
+        "id": "S:color0",
+        "name": "Marca/Azul",
+        "color": {
+          "r": 0.01568627450980392,
+          "g": 0.20784313725490197,
+          "b": 0.396078431372549
+        },
+        "source": "style"
+      },
+      {
+        "id": "S:color1",
+        "name": "Texto/Principal",
+        "color": {
+          "r": 0.06666666666666667,
+          "g": 0.06666666666666667,
+          "b": 0.06666666666666667
+        },
+        "source": "style"
+      },
+      {
+        "id": "S:color2",
+        "name": "Fondo/Blanco",
+        "color": {
+          "r": 1,
+          "g": 1,
+          "b": 1
+        },
+        "source": "style"
+      },
+      {
+        "id": "S:color3",
+        "name": "Fondo/Gris",
+        "color": {
+          "r": 0.9490196078431372,
+          "g": 0.9568627450980393,
+          "b": 0.9686274509803922
+        },
+        "source": "style"
+      }
+    ],
+    "texts": [
+      {
+        "id": "S:text0",
+        "name": "Cuerpo",
+        "fontFamily": "Inter",
+        "fontSize": 16,
+        "fontWeight": 400
+      },
+      {
+        "id": "S:text1",
+        "name": "Título",
+        "fontFamily": "Inter",
+        "fontSize": 24,
+        "fontWeight": 700
+      },
+      {
+        "id": "S:text2",
+        "name": "Etiqueta",
+        "fontFamily": "Inter",
+        "fontSize": 12,
+        "fontWeight": 500
+      }
+    ]
+  },
+  "scene": {
+    "rootIds": [
+      "pantalla"
+    ],
+    "nodes": {
+      "pantalla": {
+        "name": "Archivo de prueba",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 1400
+        },
+        "fills": [
+          {
+            "kind": "solid",
+            "color": {
+              "r": 1,
+              "g": 1,
+              "b": 1
+            },
+            "opacity": 1,
+            "visible": true,
+            "styleId": "S:color2"
+          }
+        ],
+        "id": "pantalla",
+        "type": "FRAME",
+        "parentId": null,
+        "children": [
+          "e01",
+          "e01b",
+          "e02",
+          "e03",
+          "e04",
+          "e05",
+          "e06",
+          "e07",
+          "e08",
+          "e09-set"
+        ]
+      },
+      "e01": {
+        "name": "E01 · Contraste",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 358,
+          "height": 120
+        },
+        "fills": [
+          {
+            "kind": "solid",
+            "color": {
+              "r": 1,
+              "g": 1,
+              "b": 1
+            },
+            "opacity": 1,
+            "visible": true,
+            "styleId": "S:color2"
+          }
+        ],
+        "layout": {
+          "mode": "VERTICAL",
+          "gap": 8,
+          "padL": 16,
+          "padR": 16,
+          "padT": 16,
+          "padB": 16
+        },
+        "id": "e01",
+        "type": "FRAME",
+        "parentId": "pantalla",
+        "children": [
+          "e01-texto"
+        ]
+      },
+      "e01-texto": {
+        "name": "Texto gris claro",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 120,
+          "height": 24
+        },
+        "fills": [
+          {
+            "kind": "solid",
+            "color": {
+              "r": 0.6901960784313725,
+              "g": 0.6901960784313725,
+              "b": 0.6901960784313725
+            },
+            "opacity": 1,
+            "visible": true,
+            "styleId": "S:color1"
+          }
+        ],
+        "text": {
+          "characters": "Texto gris claro",
+          "fontSize": 16,
+          "fontFamily": "Inter",
+          "fontWeight": 400,
+          "textStyleId": "S:text0"
+        },
+        "id": "e01-texto",
+        "type": "TEXT",
+        "parentId": "e01",
+        "children": []
+      },
+      "e01b": {
+        "name": "E01b · Contraste sobre imagen",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 358,
+          "height": 120
+        },
+        "fills": [],
+        "layout": {
+          "mode": "VERTICAL",
+          "gap": 8,
+          "padL": 16,
+          "padR": 16,
+          "padT": 16,
+          "padB": 16
+        },
+        "id": "e01b",
+        "type": "FRAME",
+        "parentId": "pantalla",
+        "children": [
+          "e01b-foto",
+          "e01b-texto"
+        ]
+      },
+      "e01b-foto": {
+        "name": "Foto",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 358,
+          "height": 120
+        },
+        "fills": [
+          {
+            "kind": "image",
+            "opacity": 1,
+            "visible": true
+          }
+        ],
+        "id": "e01b-foto",
+        "type": "RECTANGLE",
+        "parentId": "e01b",
+        "children": []
+      },
+      "e01b-texto": {
+        "name": "Texto sobre foto",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 120,
+          "height": 24
+        },
+        "fills": [
+          {
+            "kind": "solid",
+            "color": {
+              "r": 0.06666666666666667,
+              "g": 0.06666666666666667,
+              "b": 0.06666666666666667
+            },
+            "opacity": 1,
+            "visible": true,
+            "styleId": "S:color1"
+          }
+        ],
+        "text": {
+          "characters": "Texto sobre foto",
+          "fontSize": 16,
+          "fontFamily": "Inter",
+          "fontWeight": 400,
+          "textStyleId": "S:text0"
+        },
+        "id": "e01b-texto",
+        "type": "TEXT",
+        "parentId": "e01b",
+        "children": []
+      },
+      "e02": {
+        "name": "E02 · Texto pequeño",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 358,
+          "height": 120
+        },
+        "fills": [
+          {
+            "kind": "solid",
+            "color": {
+              "r": 1,
+              "g": 1,
+              "b": 1
+            },
+            "opacity": 1,
+            "visible": true,
+            "styleId": "S:color2"
+          }
+        ],
+        "layout": {
+          "mode": "VERTICAL",
+          "gap": 8,
+          "padL": 16,
+          "padR": 16,
+          "padT": 16,
+          "padB": 16
+        },
+        "id": "e02",
+        "type": "FRAME",
+        "parentId": "pantalla",
+        "children": [
+          "e02-texto"
+        ]
+      },
+      "e02-texto": {
+        "name": "Letra de 11 px",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 120,
+          "height": 24
+        },
+        "fills": [
+          {
+            "kind": "solid",
+            "color": {
+              "r": 0.06666666666666667,
+              "g": 0.06666666666666667,
+              "b": 0.06666666666666667
+            },
+            "opacity": 1,
+            "visible": true,
+            "styleId": "S:color1"
+          }
+        ],
+        "text": {
+          "characters": "Letra de 11 px",
+          "fontSize": 11,
+          "fontFamily": "Inter",
+          "fontWeight": 400,
+          "textStyleId": "S:text0"
+        },
+        "id": "e02-texto",
+        "type": "TEXT",
+        "parentId": "e02",
+        "children": []
+      },
+      "e03": {
+        "name": "E03 · Área táctil",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 358,
+          "height": 120
+        },
+        "fills": [
+          {
+            "kind": "solid",
+            "color": {
+              "r": 1,
+              "g": 1,
+              "b": 1
+            },
+            "opacity": 1,
+            "visible": true,
+            "styleId": "S:color2"
+          }
+        ],
+        "layout": {
+          "mode": "VERTICAL",
+          "gap": 8,
+          "padL": 16,
+          "padR": 16,
+          "padT": 16,
+          "padB": 16
+        },
+        "id": "e03",
+        "type": "FRAME",
+        "parentId": "pantalla",
+        "children": [
+          "e03-boton"
+        ]
+      },
+      "e03-boton": {
+        "name": "Botón / Principal",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 32,
+          "height": 24
+        },
+        "fills": [],
+        "component": {
+          "kind": "instance",
+          "props": {
+            "State": "Default"
+          },
+          "mainName": "Botón"
+        },
+        "id": "e03-boton",
+        "type": "INSTANCE",
+        "parentId": "e03",
+        "children": []
+      },
+      "e04": {
+        "name": "E04 · Capas sin nombre",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 358,
+          "height": 120
+        },
+        "fills": [
+          {
+            "kind": "solid",
+            "color": {
+              "r": 1,
+              "g": 1,
+              "b": 1
+            },
+            "opacity": 1,
+            "visible": true,
+            "styleId": "S:color2"
+          }
+        ],
+        "layout": {
+          "mode": "VERTICAL",
+          "gap": 8,
+          "padL": 16,
+          "padR": 16,
+          "padT": 16,
+          "padB": 16
+        },
+        "id": "e04",
+        "type": "FRAME",
+        "parentId": "pantalla",
+        "children": [
+          "e04-frame",
+          "e04-rect"
+        ]
+      },
+      "e04-frame": {
+        "name": "Frame 482",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 100,
+          "height": 40
+        },
+        "fills": [],
+        "layout": {
+          "mode": "HORIZONTAL",
+          "gap": 8,
+          "padL": 16,
+          "padR": 16,
+          "padT": 16,
+          "padB": 16
+        },
+        "id": "e04-frame",
+        "type": "FRAME",
+        "parentId": "e04",
+        "children": [
+          "e04-texto"
+        ]
+      },
+      "e04-texto": {
+        "name": "Contenido",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 120,
+          "height": 24
+        },
+        "fills": [
+          {
+            "kind": "solid",
+            "color": {
+              "r": 0.06666666666666667,
+              "g": 0.06666666666666667,
+              "b": 0.06666666666666667
+            },
+            "opacity": 1,
+            "visible": true,
+            "styleId": "S:color1"
+          }
+        ],
+        "text": {
+          "characters": "Contenido",
+          "fontSize": 16,
+          "fontFamily": "Inter",
+          "fontWeight": 400,
+          "textStyleId": "S:text0"
+        },
+        "id": "e04-texto",
+        "type": "TEXT",
+        "parentId": "e04-frame",
+        "children": []
+      },
+      "e04-rect": {
+        "name": "Rectangle 12",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 40,
+          "height": 40
+        },
+        "fills": [
+          {
+            "kind": "solid",
+            "color": {
+              "r": 0.9490196078431372,
+              "g": 0.9568627450980393,
+              "b": 0.9686274509803922
+            },
+            "opacity": 1,
+            "visible": true,
+            "styleId": "S:color3"
+          }
+        ],
+        "id": "e04-rect",
+        "type": "RECTANGLE",
+        "parentId": "e04",
+        "children": []
+      },
+      "e05": {
+        "name": "E05 · Relleno sin estilo",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 358,
+          "height": 120
+        },
+        "fills": [
+          {
+            "kind": "solid",
+            "color": {
+              "r": 1,
+              "g": 1,
+              "b": 1
+            },
+            "opacity": 1,
+            "visible": true,
+            "styleId": "S:color2"
+          }
+        ],
+        "layout": {
+          "mode": "VERTICAL",
+          "gap": 8,
+          "padL": 16,
+          "padR": 16,
+          "padT": 16,
+          "padB": 16
+        },
+        "id": "e05",
+        "type": "FRAME",
+        "parentId": "pantalla",
+        "children": [
+          "e05-rect"
+        ]
+      },
+      "e05-rect": {
+        "name": "Muestra naranja",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 40,
+          "height": 40
+        },
+        "fills": [
+          {
+            "kind": "solid",
+            "color": {
+              "r": 1,
+              "g": 0.5333333333333333,
+              "b": 0
+            },
+            "opacity": 1,
+            "visible": true
+          }
+        ],
+        "id": "e05-rect",
+        "type": "RECTANGLE",
+        "parentId": "e05",
+        "children": []
+      },
+      "e06": {
+        "name": "E06 · Color casi igual a un estilo",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 358,
+          "height": 120
+        },
+        "fills": [
+          {
+            "kind": "solid",
+            "color": {
+              "r": 1,
+              "g": 1,
+              "b": 1
+            },
+            "opacity": 1,
+            "visible": true,
+            "styleId": "S:color2"
+          }
+        ],
+        "layout": {
+          "mode": "VERTICAL",
+          "gap": 8,
+          "padL": 16,
+          "padR": 16,
+          "padT": 16,
+          "padB": 16
+        },
+        "id": "e06",
+        "type": "FRAME",
+        "parentId": "pantalla",
+        "children": [
+          "e06-rect"
+        ]
+      },
+      "e06-rect": {
+        "name": "Muestra casi azul",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 40,
+          "height": 40
+        },
+        "fills": [
+          {
+            "kind": "solid",
+            "color": {
+              "r": 0.027450980392156862,
+              "g": 0.22745098039215686,
+              "b": 0.41568627450980394
+            },
+            "opacity": 1,
+            "visible": true
+          }
+        ],
+        "id": "e06-rect",
+        "type": "RECTANGLE",
+        "parentId": "e06",
+        "children": []
+      },
+      "e07": {
+        "name": "E07 · Texto sin estilo",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 358,
+          "height": 120
+        },
+        "fills": [
+          {
+            "kind": "solid",
+            "color": {
+              "r": 1,
+              "g": 1,
+              "b": 1
+            },
+            "opacity": 1,
+            "visible": true,
+            "styleId": "S:color2"
+          }
+        ],
+        "layout": {
+          "mode": "VERTICAL",
+          "gap": 8,
+          "padL": 16,
+          "padR": 16,
+          "padT": 16,
+          "padB": 16
+        },
+        "id": "e07",
+        "type": "FRAME",
+        "parentId": "pantalla",
+        "children": [
+          "e07-texto"
+        ]
+      },
+      "e07-texto": {
+        "name": "Texto sin estilo de texto",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 120,
+          "height": 24
+        },
+        "fills": [
+          {
+            "kind": "solid",
+            "color": {
+              "r": 0.06666666666666667,
+              "g": 0.06666666666666667,
+              "b": 0.06666666666666667
+            },
+            "opacity": 1,
+            "visible": true,
+            "styleId": "S:color1"
+          }
+        ],
+        "text": {
+          "characters": "Texto sin estilo de texto",
+          "fontSize": 16,
+          "fontFamily": "Inter",
+          "fontWeight": 400
+        },
+        "id": "e07-texto",
+        "type": "TEXT",
+        "parentId": "e07",
+        "children": []
+      },
+      "e08": {
+        "name": "E08 · Espaciado fuera de escala",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 358,
+          "height": 120
+        },
+        "fills": [
+          {
+            "kind": "solid",
+            "color": {
+              "r": 1,
+              "g": 1,
+              "b": 1
+            },
+            "opacity": 1,
+            "visible": true,
+            "styleId": "S:color2"
+          }
+        ],
+        "layout": {
+          "mode": "VERTICAL",
+          "gap": 13,
+          "padL": 16,
+          "padR": 16,
+          "padT": 10,
+          "padB": 16
+        },
+        "id": "e08",
+        "type": "FRAME",
+        "parentId": "pantalla",
+        "children": [
+          "e08-texto"
+        ]
+      },
+      "e08-texto": {
+        "name": "Gap 13 y relleno 10",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 120,
+          "height": 24
+        },
+        "fills": [
+          {
+            "kind": "solid",
+            "color": {
+              "r": 0.06666666666666667,
+              "g": 0.06666666666666667,
+              "b": 0.06666666666666667
+            },
+            "opacity": 1,
+            "visible": true,
+            "styleId": "S:color1"
+          }
+        ],
+        "text": {
+          "characters": "Gap 13 y relleno 10",
+          "fontSize": 16,
+          "fontFamily": "Inter",
+          "fontWeight": 400,
+          "textStyleId": "S:text0"
+        },
+        "id": "e08-texto",
+        "type": "TEXT",
+        "parentId": "e08",
+        "children": []
+      },
+      "e09-set": {
+        "name": "Botón",
+        "visible": true,
+        "opacity": 1,
+        "box": {
+          "x": 0,
+          "y": 0,
+          "width": 300,
+          "height": 120
+        },
+        "fills": [],
+        "component": {
+          "kind": "set",
+          "variantOptions": {
+            "Estado": [
+              "Normal",
+              "Hover"
+            ]
+          }
+        },
+        "id": "e09-set",
+        "type": "COMPONENT_SET",
+        "parentId": "pantalla",
+        "children": []
+      }
+    }
+  },
+  "expectedFindings": [
+    "color-near-style:e06-rect",
+    "component-missing-states:e09-set",
+    "contrast:e01-texto",
+    "contrast:e01b-texto",
+    "fill-no-style:e05-rect",
+    "layer-default-name:e04-frame",
+    "layer-default-name:e04-rect",
+    "spacing-off-scale:e08",
+    "text-no-style:e07-texto",
+    "text-small:e02-texto",
+    "touch-target:e03-boton"
+  ]
+}

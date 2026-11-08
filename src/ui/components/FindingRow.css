@@ -1,0 +1,16 @@
+.rp-row { display: flex; align-items: flex-start; gap: var(--rp-space-1); padding: var(--rp-space-1) var(--rp-space-2) var(--rp-space-1) 0; border-bottom: 1px solid var(--rp-border); list-style: none; animation: rp-fade-in var(--rp-duration) var(--rp-ease); }
+.rp-row:hover { background: var(--rp-bg-hover); }
+.rp-row__main { flex: 1; min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; justify-items: start; text-align: left; min-height: var(--rp-row-min); padding: var(--rp-space-2) var(--rp-space-2) var(--rp-space-2) var(--rp-gutter); border: 0; background: transparent; }
+.rp-row__main:focus-visible { box-shadow: inset 0 0 0 2px var(--rp-focus); border-radius: 0; }
+.rp-row__meta { display: flex; align-items: center; gap: var(--rp-space-2); }
+.rp-row__cat { font-size: var(--rp-text-xs); color: var(--rp-text-secondary); }
+.rp-row__msg { font-size: var(--rp-text-sm); font-weight: var(--rp-weight-semibold); line-height: var(--rp-leading-tight); overflow-wrap: anywhere; }
+.rp-row__layer { display: inline-flex; align-items: center; gap: var(--rp-space-1); max-width: 100%; padding: 2px var(--rp-space-2) 2px 6px; border-radius: var(--rp-radius-sm); background: var(--rp-bg-sunken); font-size: var(--rp-text-xs); color: var(--rp-text); }
+.rp-row__layer .rp-icon { flex: none; color: var(--rp-text-secondary); }
+.rp-row__layername { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.rp-row__detail { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: var(--rp-text-xs); color: var(--rp-text-secondary); }
+.rp-row__actions { flex: none; display: flex; align-items: center; gap: 2px; padding-top: var(--rp-space-2); }
+
+.rp-row__ai { display: grid; gap: 2px; width: 100%; padding: var(--rp-space-2); border-left: 2px solid var(--rp-accent); border-radius: 0 var(--rp-radius-sm) var(--rp-radius-sm) 0; background: var(--rp-accent-subtle); color: var(--rp-accent-subtle-text); font-size: var(--rp-text-xs); }
+.rp-row__ailabel { display: inline-flex; align-items: center; gap: var(--rp-space-1); font-weight: var(--rp-weight-semibold); }
+.rp-row__ainote { white-space: pre-line; overflow-wrap: anywhere; }

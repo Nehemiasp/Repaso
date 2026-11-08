@@ -1,0 +1,8 @@
+.rp-ring { position: relative; flex: none; }
+.rp-ring__track { stroke: var(--rp-bg-sunken); }
+.rp-ring__value { stroke: var(--rp-accent); transition: stroke-dashoffset 600ms var(--rp-ease); }
+.rp-ring--bad .rp-ring__value { stroke: var(--rp-sev-high); }
+.rp-ring--good .rp-ring__value { stroke: var(--rp-success); }
+.rp-ring__text { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; line-height: 1; }
+.rp-ring__num { font-size: max(var(--rp-text-xs), calc(var(--rp-ring-size, 84px) * 0.3)); font-weight: var(--rp-weight-bold); font-variant-numeric: tabular-nums; }
+.rp-ring__of { margin-top: 2px; font-size: var(--rp-text-xs); color: var(--rp-text-secondary); }

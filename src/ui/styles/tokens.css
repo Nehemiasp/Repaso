@@ -1,0 +1,163 @@
+/*
+ * TOKENS DE REPASO — el único lugar con colores, tamaños, radios y espaciados.
+ * Para retocar la interfaz, cambie valores aquí; los componentes solo usan var(--rp-*).
+ *
+ * Tema: Figma inyecta --figma-color-* (themeColors: true) y la clase .figma-light o
+ * .figma-dark en <html>. Los fondos, bordes y el texto principal los toman de Figma;
+ * el resto (acento, severidades, texto secundario) son propios, con contraste AA verificado
+ * por tests/tokens.test.ts.
+ */
+
+:root {
+  /* ── Marca ───────────────────────────────────────────── */
+  --rp-accent: #043565;
+  --rp-accent-hover: #022a4f;
+  --rp-accent-pressed: #021f3b;
+  --rp-on-accent: #ffffff;
+  --rp-accent-subtle: #e6eef8;
+  --rp-accent-subtle-text: #043565;
+
+  /* ── Superficies y texto ─────────────────────────────── */
+  --rp-bg: var(--figma-color-bg, #ffffff);
+  --rp-bg-raised: var(--figma-color-bg-secondary, #f5f5f5);
+  --rp-bg-sunken: var(--figma-color-bg-tertiary, #ebebeb);
+  --rp-bg-hover: var(--figma-color-bg-hover, rgba(0, 0, 0, 0.06));
+  --rp-bg-selected: var(--figma-color-bg-selected, #e6eef8);
+  --rp-text: var(--figma-color-text, #1a1a1a);
+  /* Propio: el secundario de Figma no llega a 4,5:1 sobre el fondo. */
+  --rp-text-secondary: #595959;
+  --rp-border: var(--figma-color-border, #e6e6e6);
+  --rp-border-strong: var(--figma-color-border-strong, #b3b3b3);
+  --rp-scrim: rgba(0, 0, 0, 0.4);
+
+  /* ── Severidad: primer plano y fondo (siempre acompañados de ícono y texto) ── */
+  --rp-sev-critical: #a4131b;
+  --rp-sev-critical-bg: #fdecec;
+  --rp-sev-high: #9a3b00;
+  --rp-sev-high-bg: #fff0e5;
+  --rp-sev-medium: #7a5200;
+  --rp-sev-medium-bg: #fff6d9;
+  --rp-sev-low: #1f4e8c;
+  --rp-sev-low-bg: #e8f0fb;
+  --rp-sev-unverified: #4a4a4a;
+  --rp-sev-unverified-bg: #efefef;
+
+  /* ── Estados ─────────────────────────────────────────── */
+  --rp-success: #0b6b3a;
+  --rp-success-bg: #e6f5ec;
+  --rp-warning: #7a5200;
+  --rp-warning-bg: #fff6d9;
+  --rp-danger: #a4131b;
+  --rp-danger-bg: #fdecec;
+  --rp-info: #1f4e8c;
+  --rp-info-bg: #e8f0fb;
+
+  /* ── Foco visible ────────────────────────────────────── */
+  --rp-focus: #043565;
+  --rp-focus-ring: 0 0 0 2px var(--rp-bg), 0 0 0 4px var(--rp-focus);
+
+  /* ── Espaciado (rejilla de 4 px) ─────────────────────── */
+  --rp-space-1: 4px;
+  --rp-space-2: 8px;
+  --rp-space-3: 12px;
+  --rp-space-4: 16px;
+  --rp-space-5: 20px;
+  --rp-space-6: 24px;
+  --rp-space-8: 32px;
+
+  /* ── Radios ──────────────────────────────────────────── */
+  --rp-radius-sm: 4px;
+  --rp-radius-md: 6px;
+  --rp-radius-lg: 10px;
+  --rp-radius-full: 999px;
+
+  /* ── Tipografía (Inter, la de Figma; nunca menos de 12 px) ── */
+  --rp-font: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --rp-font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  --rp-text-xs: 12px;
+  --rp-text-sm: 13px;
+  --rp-text-md: 14px;
+  --rp-text-lg: 16px;
+  --rp-text-xl: 20px;
+  --rp-text-2xl: 28px;
+  --rp-weight-regular: 400;
+  --rp-weight-medium: 500;
+  --rp-weight-semibold: 600;
+  --rp-weight-bold: 700;
+  --rp-leading-tight: 1.25;
+  --rp-leading: 1.5;
+
+  /* ── Tamaños ─────────────────────────────────────────── */
+  --rp-control-sm: 28px;
+  --rp-control-md: 32px;
+  --rp-control-lg: 40px;
+  --rp-icon-sm: 14px;
+  --rp-icon-md: 16px;
+  --rp-icon-lg: 20px;
+  --rp-header-height: 48px;
+  --rp-gutter: 16px;
+  --rp-row-min: 64px;
+  --rp-ring-size: 84px;
+
+  /* ── Sombras y capas ─────────────────────────────────── */
+  --rp-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.12);
+  --rp-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.18);
+  --rp-z-sheet: 20;
+  --rp-z-toast: 30;
+
+  /* ── Movimiento (sutil) ──────────────────────────────── */
+  --rp-duration-fast: 120ms;
+  --rp-duration: 200ms;
+  --rp-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.figma-dark {
+  --rp-accent: #8db6e8;
+  --rp-accent-hover: #a6c8ee;
+  --rp-accent-pressed: #bdd6f3;
+  --rp-on-accent: #04203e;
+  --rp-accent-subtle: #1c3350;
+  --rp-accent-subtle-text: #a9caf0;
+
+  --rp-bg: var(--figma-color-bg, #2c2c2c);
+  --rp-bg-raised: var(--figma-color-bg-secondary, #383838);
+  --rp-bg-sunken: var(--figma-color-bg-tertiary, #444444);
+  --rp-bg-hover: var(--figma-color-bg-hover, rgba(255, 255, 255, 0.1));
+  --rp-bg-selected: var(--figma-color-bg-selected, #1c3350);
+  --rp-text: var(--figma-color-text, #ffffff);
+  --rp-text-secondary: #b8b8b8;
+  --rp-border: var(--figma-color-border, #444444);
+  --rp-border-strong: var(--figma-color-border-strong, #6b6b6b);
+  --rp-scrim: rgba(0, 0, 0, 0.6);
+
+  --rp-sev-critical: #ffa3a6;
+  --rp-sev-critical-bg: #4a1e21;
+  --rp-sev-high: #ffb787;
+  --rp-sev-high-bg: #4a2a14;
+  --rp-sev-medium: #f5d06b;
+  --rp-sev-medium-bg: #43360e;
+  --rp-sev-low: #a8c7f0;
+  --rp-sev-low-bg: #1f2f45;
+  --rp-sev-unverified: #d0d0d0;
+  --rp-sev-unverified-bg: #3d3d3d;
+
+  --rp-success: #7fd9a3;
+  --rp-success-bg: #163a27;
+  --rp-warning: #f5d06b;
+  --rp-warning-bg: #43360e;
+  --rp-danger: #ffa3a6;
+  --rp-danger-bg: #4a1e21;
+  --rp-info: #a8c7f0;
+  --rp-info-bg: #1f2f45;
+
+  --rp-focus: #8db6e8;
+  --rp-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --rp-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --rp-duration-fast: 0ms;
+    --rp-duration: 0ms;
+  }
+}
